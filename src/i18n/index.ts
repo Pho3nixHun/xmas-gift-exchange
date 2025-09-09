@@ -17,7 +17,7 @@ i18n
         translation: huTranslations
       }
     },
-    fallbackLng: 'en',
+    fallbackLng: 'hu',
     debug: process.env.NODE_ENV === 'development',
     interpolation: {
       escapeValue: false
