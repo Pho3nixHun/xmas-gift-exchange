@@ -1,0 +1,183 @@
+{
+  "loading": {
+    "title": "Karácsonyi",
+    "subtitle": "Ajándékcsere",
+    "fact": "🎄 Karácsonyi Érdekesség #{{number}}",
+    "progress": "Varázslatos karácsonyi élmény betöltése... {{progress}}%",
+    "complete": "Üdvözöl a karácsonyi varázslat! 🎅"
+  },
+  "login": {
+    "title": "Üdvözlet!",
+    "username_label": "Ki vagy?",
+    "username_placeholder": "Válaszd ki a neved...",
+    "password_create_label": "Készíts jelszót:",
+    "password_enter_label": "Add meg a jelszavad:",
+    "password_create_placeholder": "Készíts biztonságos jelszót",
+    "password_enter_placeholder": "Add meg a jelszavad",
+    "password_hint": "💡 A jelszó megakadályozza, hogy a kíváncsi-fáncsik meglessék kit választottál!",
+    "button_new": "Belépés",
+    "button_existing": "Belépés",
+    "participants": "Elérhető résztvevők: {{count}}",
+    "loading": "Betöltés...",
+    "password_protected": "🔒"
+  },
+  "selection": {
+    "title": "🎁 Válassz Ajándékdobozt",
+    "greeting": "Szia, {{name}}!",
+    "description": "Minden doboz egy különleges személyt rejt, aki várja a gondos ajándékodat. Válassz bölcsen - csak egyet választhatsz! ✨",
+    "available": "✅ Elérhető",
+    "taken": "❌ Már foglalt",
+    "taken_by": "{{name}} választotta",
+    "confirm_button": "🎁 {{name}} kiválasztása ajándékozásra!",
+    "confirm_button_anonymous": "Válaszd ezt a titokzatos ajándékozottat!",
+    "confirm_hint": "Kattints a választás megerősítéséhez. Ez már nem változtatható!",
+    "selecting": "Ajándékozandó személy kiválasztása...",
+    "stats": "{{available}} doboz elérhető • {{taken}} már foglalt"
+  },
+  "wishes": {
+    "title": "🎄 Karácsonyi Kívánságaid",
+    "greeting": "Szia, {{name}}!",
+    "giving_to": "Te ajándékozod meg: {{recipient}} 🎁",
+    "wish_list_title": "Kívánságlistád",
+    "placeholder": "Mi tenné varázslatossá a karácsonyt? Oszd meg itt a kívánságaidat... ✨\n\nPéldák:\n• Valami meleg a hideg téli estékre\n• Egy inspiráló könyv\n• Művészeti kellékek a kreatív projektjeimhez\n• Valami finom élvezet",
+    "character_count": "{{current}}/{{max}} karakter",
+    "cancel": "Mégse",
+    "save": "Kívánságok mentése",
+    "saving": "Mentés...",
+    "no_wishes": "Még nem írtad meg a kívánságaidat.",
+    "write_wishes": "Írd meg kívánságaidat ✨",
+    "gift_ideas_title": "Ajándék ötletek",
+    "gift_suggestion_hint": "💡 Kattints bármelyik javaslatra, hogy hozzáadd a kívánságaidhoz!",
+    "summary_title": "📋 Összefoglaló",
+    "summary_you": "Te",
+    "summary_giving_to": "Ajándékozod",
+    "summary_status": "Állapot",
+    "status_saved": "✅ Kívánságok elmentve",
+    "status_pending": "⏳ Kívánságok függőben",
+    "refresh": "Adatok frissítése",
+    "logout": "Kijelentkezés",
+    "footer_text": "Kívánságaid biztonságosan el vannak mentve és segítik a Mikulásodat a tökéletes ajándék kiválasztásában! 🎅✨",
+    "recipient_wishes_title": "{{name}} kívánságai",
+    "recipient_no_wishes": "{{name}} még nem írta meg a kívánságait.",
+    "recipient_wishes_hint": "💡 Ezek {{name}} kívánságai, hogy segítsenek kiválasztani a tökéletes ajándékot!",
+    "recipient_no_wishes_hint": "Még nem osztotta meg a kívánságait, de bármilyen megfontolt ajándék biztos örömet szerez! 🎁",
+    "your_section_title": "Karácsonyi kívánságaid",
+    "recipient_section_title": "Ajándékozottak kívánságai"
+  },
+  "gifts": {
+    "suggestions": [
+      "🧸 Egy puha mackó",
+      "📚 Egy jó könyv olvasásra",
+      "🍫 Finom csokoládék",
+      "🧣 Meleg téli sál",
+      "🕯️ Illatos gyertyák",
+      "🎮 Szórakoztató társasjáték",
+      "🌱 Egy kis növény",
+      "☕ Prémium kávé vagy tea",
+      "🎨 Művészeti kellékek",
+      "🧩 Kihívást jelentő puzzle"
+    ]
+  },
+  "facts": [
+    "A karácsonyfák hagyománya Németországból származik, a 16. századból.",
+    "A Télapó Szent Miklóson alapul, egy 4. századi keresztény püspökön, aki ajándékozásáról volt híres.",
+    "Az első karácsonyi képeslapot 1843-ban küldte el Sir Henry Cole Londonban.",
+    "A Csengő-bongó eredetileg hálaadásra íródott, nem karácsonyra!",
+    "A karácsonyi zokni hagyománya Szent Miklós legendájából ered, aki aranyérméket hagyott zokniba.",
+    "A karácsonyi koszorú az örök életet és az évszakok körforgását jelképezi.",
+    "A Boxing Day nevét onnan kapta, hogy a szolgálóknak dobozokban adtak ajándékokat.",
+    "A fagyöngyöt az ősi druidák szentnek tartották és a békét és barátságot jelképezte.",
+    "A cukorpálca alakja a pásztorbotot jelképezi, tisztelegve a pásztorók előtt, akik meglátogatták a kis Jézust.",
+    "A karácsonyi fényeket először Thomas Edison használta 1880-ban a laboratóriuma megvilágítására."
+  ],
+  "errors": {
+    "user_not_found": "Felhasználó nem található a rendszerben",
+    "incorrect_password": "Helytelen jelszó",
+    "login_failed": "Bejelentkezés sikertelen",
+    "already_picked": "Ezt a nevet már kiválasztották!",
+    "failed_to_select": "Név kiválasztása sikertelen",
+    "failed_to_save": "Kívánságok mentése sikertelen",
+    "failed_to_load": "Adatok betöltése sikertelen"
+  },
+  "wishItem": {
+    "priority_high": "Magas prioritás",
+    "priority_medium": "Közepes prioritás",
+    "priority_low": "Alacsony prioritás",
+    "loading_preview": "Előnézet betöltése...",
+    "preview_error": "Előnézet betöltése sikertelen",
+    "product_image": "Termék kép",
+    "edit": "Kívánság szerkesztése",
+    "delete": "Kívánság törlése",
+    "created_on": "Hozzáadva: {{date}}"
+  },
+  "wishForm": {
+    "add_wish": "Új kívánság hozzáadása",
+    "edit_wish": "Kívánság szerkesztése",
+    "description_label": "Mit kívánsz?",
+    "description_placeholder": "Írd le, mit szeretnél karácsonyra kapni...",
+    "character_count": "{{current}}/{{max}} karakter",
+    "url_label": "Termék link (opcionális)",
+    "url_placeholder": "https://example.com/termek",
+    "url_hint": "Adj meg egy linket, hogy a Mikulásod megtalálja a pontos terméket",
+    "invalid_url": "Kérlek adj meg egy érvényes URL-t",
+    "metadata_fetch_error": "Termék előnézet betöltése sikertelen",
+    "loading_preview": "Termék előnézet betöltése...",
+    "priority_label": "Mennyire fontos ez a kívánság?",
+    "priority_low": "Alacsony",
+    "priority_medium": "Közepes",
+    "priority_high": "Magas",
+    "cancel": "Mégse",
+    "save_changes": "Változások mentése",
+    "add_wish_button": "Kívánság hozzáadása"
+  },
+  "wishList": {
+    "title": "Karácsonyi kívánságaid",
+    "add_first_wish": "Add hozzá az első kívánságodat ✨",
+    "no_wishes": "Még nem adtál hozzá kívánságokat.",
+    "no_wishes_hint": "Kezdd azzal, hogy hozzáadod mit szeretnél karácsonyra kapni!",
+    "add_wish": "Új kívánság",
+    "empty_state": "Még nincsenek kívánságok",
+    "recipient_wishes": "{{name}} kívánságai",
+    "recipient_no_wishes": "{{name}} még nem adott hozzá kívánságokat.",
+    "recipient_wishes_help": "Ezek a kívánságok segítenek a tökéletes ajándék kiválasztásában!"
+  },
+  "common": {
+    "loading": "Betöltés...",
+    "error": "Hiba",
+    "success": "Siker",
+    "you": "Te"
+  },
+  "boxes": {
+    "themes": [
+      "🎁 Titokzatos Vörös Doboz",
+      "💚 Bűvölt Zöld Doboz",
+      "💙 Varázslatos Kék Doboz",
+      "💜 Királyi Lila Doboz",
+      "💛 Arany Kincses Doboz",
+      "💖 Rózsaszín Rózsa Doboz",
+      "💙 Indigó Álom Doboz",
+      "💚 Türkiz Csóda Doboz",
+      "🤍 Ezüst Rejtély Doboz",
+      "🧡 Narancssárga Meglepés Doboz",
+      "💙 Cián Varázs Doboz",
+      "💜 Ibolya Bűvölet Doboz"
+    ]
+  },
+  "navigation": {
+    "myWishes": "Kívánságaim",
+    "allWishes": "Minden kívánság"
+  },
+  "allWishes": {
+    "title": "Mindenki karácsonyi kívánságai",
+    "subtitle": "Nézd meg, mit kívánnak mások erre a karácsonyra",
+    "description": "Segíts koordinálni az ajándékokat és jelöld meg a tételeket, amiket tervezel megvenni a duplikációk elkerülésére!",
+    "selectUser": "Válassz egy személyt, hogy lásd a kívánságait",
+    "wishes": "kívánság",
+    "userWishes": "{{name}} kívánságai",
+    "yourWishes": "Kívánságaid",
+    "noWishes": "{{name}} még nem adott hozzá kívánságokat.",
+    "markPurchased": "Megvásároltként jelölés",
+    "markNotPurchased": "Megvásárlás visszavonása",
+    "purchasedBy": "Megvásárolta: {{name}}"
+  }
+}

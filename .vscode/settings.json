@@ -1,0 +1,19 @@
+{
+    "tailwindCSS.experimental.configFile": null,
+    "tailwindCSS.experimental.classRegex": [
+        "/\\*\\s*tw\\s*\\*/\\s*'([^']*)'",
+        "/\\*\\s*tw\\s*\\*/\\s*\"([^\"]*)\""
+    ],
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact",
+        "typescript": "typescriptreact"
+    },
+    "files.associations": {
+        "*.tsx": "typescriptreact"
+    }
+}

@@ -1,0 +1,57 @@
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "source": "ts",
+        "fileLocation": "relative",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "Starting the development server"
+          },
+          "endsPattern": {
+            "regexp": "webpack compiled|Failed to compile|Compiled successfully"
+          }
+        }
+      }
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "problemMatcher": {
+        "owner": "typescript",
+        "source": "ts",
+        "fileLocation": "relative",
+        "pattern": "$tsc"
+      }
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "source": "ts",
+        "fileLocation": "relative",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "No tests found"
+          },
+          "endsPattern": {
+            "regexp": "Tests:.*|FAIL.*|PASS.*"
+          }
+        }
+      }
+    }
+  ]
+}
