@@ -14,6 +14,7 @@ import { NamePickerData } from '../types';
 import { WishItemWithMetadata, WishList, URLMetadata } from '../types/wishItem';
 import WishItem from './WishItem';
 import WishForm from './WishForm';
+import { RulesSection } from './RulesSection';
 
 interface WishesScreenProps {
   data: NamePickerData;
@@ -201,6 +202,9 @@ const WishesScreen: React.FC<WishesScreenProps> = ({
               </p>
             </div>
           </motion.div>
+
+          {/* Rules Section */}
+          <RulesSection />
 
           {/* Recipient's Wishes Section */}
           <motion.div

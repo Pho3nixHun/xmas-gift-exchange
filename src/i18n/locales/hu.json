@@ -34,6 +34,38 @@
     "selecting": "Ajándékozandó személy kiválasztása...",
     "stats": "{{available}} doboz elérhető • {{taken}} már foglalt"
   },
+  "rules": {
+    "title": "🎄 Ajándékcsere Szabályok",
+    "subtitle": "Legyen jelentőségteljes, ne átlagos!",
+    "main_rule": "Mivel csak EGY ajándékot veszel sok helyett, tedd értékessé! 🎁",
+    "avoid_title": "❌ Kerüld a sablonos ajándékokat:",
+    "avoid_items": [
+      "Alapvető zokni vagy fehérnemű",
+      "Átlagos kávésbögre",
+      "Olcsó ajándékkártyák kis összeggel",
+      "Véletlenszerű apróságok vagy csecsebecsék",
+      "Utolsó pillanatos benzinkúti ajándékok"
+    ],
+    "consider_title": "✨ Gondolj valami átgondoltra:",
+    "consider_items": [
+      "Valami a hobbijával vagy érdeklődésével kapcsolatos",
+      "Minőségi dolog, amit említett hogy szeretne",
+      "Egy élmény, amit élvezne",
+      "Valami kézzel készült vagy személyre szabott",
+      "Egy könyv, játék vagy eszköz, amit tényleg használna"
+    ],
+    "budget_title": "💰 Költségvetési Iránymutatás:",
+    "budget_range": "Célozz meg 15000-20000 Ft közötti összeget",
+    "budget_note": "A minőség és az átgondoltság fontosabb, mint az ár!",
+    "tip_title": "💡 Profi Tippek:",
+    "tips": [
+      "Nézd meg a kívánságlistáját konkrét ötletekért",
+      "Kérdezz közös barátokat finoman",
+      "Gondolj arra, ami őszintén boldoggá tenné",
+      "Mellékelj egy átgondolt üzenetet, hogy elmagyarázd miért ezt választottad"
+    ],
+    "remember": "Ne feledd: A cél az öröm okozása, nem a fa alatti hely kitöltése! 🎅✨"
+  },
   "wishes": {
     "title": "🎄 Karácsonyi Kívánságaid",
     "greeting": "Szia, {{name}}!",

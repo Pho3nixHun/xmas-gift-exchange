@@ -36,6 +36,38 @@
     "selecting": "Selecting your gift recipient...",
     "stats": "{{available}} boxes available • {{taken}} already chosen"
   },
+  "rules": {
+    "title": "🎄 Gift Exchange Guidelines",
+    "subtitle": "Make it meaningful, not mundane!",
+    "main_rule": "Since you're buying just ONE gift instead of many, make it count! 🎁",
+    "avoid_title": "❌ Please avoid generic gifts:",
+    "avoid_items": [
+      "Basic socks or underwear",
+      "Generic coffee mugs",
+      "Cheap gift cards with low amounts",
+      "Random knick-knacks or trinkets",
+      "Last-minute convenience store items"
+    ],
+    "consider_title": "✨ Consider something thoughtful:",
+    "consider_items": [
+      "Something related to their hobbies or interests",
+      "A quality item they mentioned wanting",
+      "An experience they would enjoy",
+      "Something handmade or personalized",
+      "A book, game, or tool they'd actually use"
+    ],
+    "budget_title": "💰 Budget Guidelines:",
+    "budget_range": "Aim for $30-60 (or local equivalent)",
+    "budget_note": "Quality and thoughtfulness matter more than price!",
+    "tip_title": "💡 Pro Tips:",
+    "tips": [
+      "Check their wish list for specific ideas",
+      "Ask mutual friends for subtle hints",
+      "Think about what would genuinely make them smile",
+      "Include a thoughtful card explaining why you chose it"
+    ],
+    "remember": "Remember: The goal is to bring joy, not fill space under a tree! 🎅✨"
+  },
   "wishes": {
     "title": "🎄 Your Christmas Wishes",
     "greeting": "Hello, {{name}}!",

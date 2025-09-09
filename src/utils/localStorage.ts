@@ -2,10 +2,34 @@ import { PasswordHasher } from './passwordHash';
 
 const STORAGE_KEYS = {
   CURRENT_USER: 'christmas-gift-exchange-user',
-  USER_PASSWORD_HASH: 'christmas-gift-exchange-password-hash'
+  USER_PASSWORD_HASH: 'christmas-gift-exchange-password-hash',
+  RULES_CLOSED: 'christmas-gift-exchange-rules-closed'
 };
 
 export class LocalStorageService {
+  static saveRulesClosed(closed: boolean): void {
+    try {
+      localStorage.setItem(
+        STORAGE_KEYS.RULES_CLOSED,
+        closed ? 'true' : 'false'
+      );
+    } catch (error) {
+      console.warn('Failed to save rules closed state to localStorage:', error);
+    }
+  }
+
+  static getRulesClosed(): boolean {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.RULES_CLOSED) === 'true';
+    } catch (error) {
+      console.warn(
+        'Failed to get rules closed state from localStorage:',
+        error
+      );
+      return false;
+    }
+  }
+
   static saveUser(username: string): void {
     try {
       localStorage.setItem(STORAGE_KEYS.CURRENT_USER, username);
@@ -59,6 +83,7 @@ export class LocalStorageService {
     try {
       localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
       localStorage.removeItem(STORAGE_KEYS.USER_PASSWORD_HASH);
+      localStorage.removeItem(STORAGE_KEYS.RULES_CLOSED);
     } catch (error) {
       console.warn('Failed to clear localStorage:', error);
     }
