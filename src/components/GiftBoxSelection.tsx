@@ -25,16 +25,20 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
 
   const availableNames = useMemo(() => {
     const names = data.names[currentUser] || [];
-    console.log('GiftBoxSelection - Available names for', currentUser, ':', names);
+    console.log(
+      'GiftBoxSelection - Available names for',
+      currentUser,
+      ':',
+      names
+    );
     console.log('GiftBoxSelection - All data.names:', data.names);
     return names;
   }, [data.names, currentUser]);
   const alreadyTaken = new Set(Object.keys(data.taken));
-  const boxThemes = t('boxes.themes', { returnObjects: true }) as string[];
 
-  const anonymousBoxes = useMemo(() => 
-    createAnonymousBoxes(availableNames, currentUser, boxThemes), 
-    [availableNames, currentUser, boxThemes]
+  const anonymousBoxes = useMemo(
+    () => createAnonymousBoxes(availableNames),
+    [availableNames]
   );
 
   const getBoxIcon = (iconType: string) => {
@@ -45,7 +49,7 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
 
   const handleBoxClick = (box: AnonymousBox) => {
     if (alreadyTaken.has(box.actualName) || loading) return;
-    
+
     // Direct selection without confirmation
     onSelectName(box.actualName);
   };
@@ -58,17 +62,14 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
-        >
+          className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             {t('selection.title')}
           </h1>
           <p className="text-xl text-white/80 mb-2">
             {t('selection.greeting', { name: currentUser })}
           </p>
-          <p className="text-white/70">
-            {t('selection.description')}
-          </p>
+          <p className="text-white/70">{t('selection.description')}</p>
         </motion.div>
 
         {/* Error Message */}
@@ -76,8 +77,7 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mb-8 bg-red-500/20 border border-red-500/50 rounded-lg p-4 max-w-md mx-auto"
-          >
+            className="mb-8 bg-red-500/20 border border-red-500/50 rounded-lg p-4 max-w-md mx-auto">
             <p className="text-red-200 text-center">{error}</p>
           </motion.div>
         )}
@@ -87,27 +87,38 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
           {anonymousBoxes.map((box, index) => {
             const isTaken = alreadyTaken.has(box.actualName);
             const isHovered = hoveredBox === box.id;
-            
+
             return (
               <motion.div
                 key={box.id}
                 initial={{ opacity: 0, y: 50, rotateX: -15 }}
                 animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.8, type: "spring" }}
-                className="relative perspective-1000"
-              >
+                transition={{
+                  delay: index * 0.1,
+                  duration: 0.8,
+                  type: 'spring'
+                }}
+                className="relative perspective-1000">
                 <motion.div
-                  whileHover={!isTaken ? { 
-                    scale: 1.1, 
-                    rotateY: 15,
-                    rotateX: -5,
-                    z: 50
-                  } : {}}
-                  whileTap={!isTaken ? { 
-                    scale: 0.95,
-                    rotateY: 0,
-                    transition: { duration: 0.1 }
-                  } : {}}
+                  whileHover={
+                    !isTaken
+                      ? {
+                          scale: 1.1,
+                          rotateY: 15,
+                          rotateX: -5,
+                          z: 50
+                        }
+                      : {}
+                  }
+                  whileTap={
+                    !isTaken
+                      ? {
+                          scale: 0.95,
+                          rotateY: 0,
+                          transition: { duration: 0.1 }
+                        }
+                      : {}
+                  }
                   className={`
                     relative aspect-square cursor-pointer transition-all duration-300 transform-gpu
                     ${isTaken ? 'opacity-40 cursor-not-allowed' : ''}
@@ -115,14 +126,13 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
                   onClick={() => handleBoxClick(box)}
                   onHoverStart={() => !isTaken && setHoveredBox(box.id)}
                   onHoverEnd={() => setHoveredBox(null)}
-                  style={{ transformStyle: 'preserve-3d' }}
-                >
+                  style={{ transformStyle: 'preserve-3d' }}>
                   {/* Present Box */}
-                  <div className={`
+                  <div
+                    className={`
                     absolute inset-0 rounded-lg shadow-2xl transform-gpu
-                    ${isTaken 
-                      ? 'bg-gray-500' 
-                      : `bg-gradient-to-br ${box.color}`
+                    ${
+                      isTaken ? 'bg-gray-500' : `bg-gradient-to-br ${box.color}`
                     }
                     ${isHovered ? 'shadow-3xl' : ''}
                   `}>
@@ -130,35 +140,43 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
                     <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-3 bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 shadow-lg">
                       <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent"></div>
                     </div>
-                    
+
                     {/* Vertical Ribbon */}
                     <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-3 bg-gradient-to-b from-yellow-400 via-yellow-300 to-yellow-400 shadow-lg">
                       <div className="absolute inset-0 bg-gradient-to-r from-white/30 to-transparent"></div>
                     </div>
-                    
+
                     {/* Bow on top */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
                       <motion.div
-                        animate={isHovered && !isTaken ? { 
-                          rotate: [0, -5, 5, -5, 0],
-                          scale: [1, 1.2, 1] 
-                        } : {}}
+                        animate={
+                          isHovered && !isTaken
+                            ? {
+                                rotate: [0, -5, 5, -5, 0],
+                                scale: [1, 1.2, 1]
+                              }
+                            : {}
+                        }
                         transition={{ duration: 0.6 }}
-                        className={`text-4xl ${isTaken ? 'grayscale' : ''}`}
-                      >
+                        className={`text-4xl ${isTaken ? 'grayscale' : ''}`}>
                         🎀
                       </motion.div>
                     </div>
 
                     {/* Gift Icon - smaller and positioned differently */}
                     <motion.div
-                      animate={isHovered && !isTaken ? { 
-                        scale: [1, 1.1, 1],
-                        rotate: [0, 10, -10, 0]
-                      } : {}}
+                      animate={
+                        isHovered && !isTaken
+                          ? {
+                              scale: [1, 1.1, 1],
+                              rotate: [0, 10, -10, 0]
+                            }
+                          : {}
+                      }
                       transition={{ duration: 0.8 }}
-                      className={`absolute bottom-2 right-2 text-white/80 ${isTaken ? 'text-gray-400' : ''}`}
-                    >
+                      className={`absolute bottom-2 right-2 text-white/80 ${
+                        isTaken ? 'text-gray-400' : ''
+                      }`}>
                       {getBoxIcon(box.icon)}
                     </motion.div>
 
@@ -167,7 +185,11 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
                       <motion.div
                         initial={{ x: '-100%', opacity: 0 }}
                         animate={{ x: '100%', opacity: [0, 1, 0] }}
-                        transition={{ duration: 0.8, repeat: Infinity, repeatDelay: 2 }}
+                        transition={{
+                          duration: 0.8,
+                          repeat: Infinity,
+                          repeatDelay: 2
+                        }}
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform rotate-12"
                       />
                     )}
@@ -191,17 +213,17 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
                           className="absolute w-1 h-1 bg-yellow-200 rounded-full"
                           style={{
                             top: `${20 + Math.random() * 60}%`,
-                            left: `${20 + Math.random() * 60}%`,
+                            left: `${20 + Math.random() * 60}%`
                           }}
                           animate={{
                             scale: [0, 1, 0],
                             opacity: [0, 1, 0],
-                            y: [0, -20, -40],
+                            y: [0, -20, -40]
                           }}
                           transition={{
                             duration: 2,
                             repeat: Infinity,
-                            delay: i * 0.3,
+                            delay: i * 0.3
                           }}
                         />
                       ))}
@@ -213,7 +235,9 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
                     <div className="absolute inset-0 rounded-lg bg-black/50 flex items-center justify-center">
                       <div className="text-red-300 text-center">
                         <div className="text-xl mb-1">✗</div>
-                        <div className="text-xs font-medium">{t('selection.taken')}</div>
+                        <div className="text-xs font-medium">
+                          {t('selection.taken')}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -223,18 +247,16 @@ const GiftBoxSelection: React.FC<GiftBoxSelectionProps> = ({
           })}
         </div>
 
-
         {/* Stats */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-center mt-12 text-white/60"
-        >
+          className="text-center mt-12 text-white/60">
           <p>
-            {t('selection.stats', { 
-              available: availableNames.length - alreadyTaken.size, 
-              taken: alreadyTaken.size 
+            {t('selection.stats', {
+              available: availableNames.length - alreadyTaken.size,
+              taken: alreadyTaken.size
             })}
           </p>
         </motion.div>

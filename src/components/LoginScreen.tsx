@@ -26,7 +26,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
 
   const availableUsers = Object.keys(data.names);
   const existingUser = availableUsers.includes(username);
-  const hasPassword = data.passwords && data.passwords[username];
+  const hasPassword = data.passwords?.[username];
 
   useEffect(() => {
     if (username && existingUser && hasPassword) {
@@ -191,10 +191,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                 <span>{t('login.loading')}</span>
               </div>
-            ) : isNewUser ? (
-              t('login.button_new')
             ) : (
-              t('login.button_existing')
+              t(isNewUser ? 'login.button_new' : 'login.button_existing')
             )}
           </motion.button>
         </form>

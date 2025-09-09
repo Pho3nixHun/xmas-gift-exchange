@@ -24,7 +24,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
           clearInterval(factInterval);
-          setTimeout(() => onComplete(), 500);
+          setTimeout(onComplete, 500);
           return 100;
         }
         return prev + 2;
@@ -48,14 +48,13 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           animate={{
             y: window.innerHeight + 100,
             x: Math.random() * window.innerWidth,
-            rotate: 360,
+            rotate: 360
           }}
           transition={{
             duration: Math.random() * 10 + 5,
             repeat: Infinity,
-            ease: "linear",
-          }}
-        >
+            ease: 'linear'
+          }}>
           <Snowflake size={Math.random() * 20 + 10} />
         </motion.div>
       ))}
@@ -65,9 +64,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 0.8, type: "spring" }}
-          className="mb-8"
-        >
+          transition={{ duration: 0.8, type: 'spring' }}
+          className="mb-8">
           <Gift size={80} className="mx-auto text-yellow-300 mb-4" />
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-2 font-serif">
             {t('loading.title')}
@@ -84,8 +82,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
+          className="mb-12">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
             <h3 className="text-lg font-semibold text-yellow-300 mb-3">
               {t('loading.fact', { number: currentFact + 1 })}
@@ -107,7 +104,9 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             />
           </div>
           <p className="text-white/80 text-sm">
-            {progress < 100 ? t('loading.progress', { progress }) : t('loading.complete')}
+            {progress < 100
+              ? t('loading.progress', { progress })
+              : t('loading.complete')}
           </p>
         </div>
       </div>

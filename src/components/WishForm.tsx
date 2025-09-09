@@ -7,12 +7,21 @@ import { urlMetadataService } from '../services/urlMetadata';
 
 interface WishFormProps {
   item?: WishItemWithMetadata;
-  onSave: (item: Omit<WishItemWithMetadata, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => void;
+  onSave: (
+    item: Omit<WishItemWithMetadata, 'id' | 'createdAt' | 'updatedAt'> & {
+      id?: string;
+    }
+  ) => void;
   onCancel: () => void;
   isOpen: boolean;
 }
 
-const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) => {
+const WishForm: React.FC<WishFormProps> = ({
+  item,
+  onSave,
+  onCancel,
+  isOpen
+}) => {
   const { t } = useTranslation();
   const [description, setDescription] = useState('');
   const [url, setUrl] = useState('');
@@ -69,6 +78,7 @@ const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) =
         const fetchedMetadata = await urlMetadataService.fetchMetadata(newUrl);
         setMetadata(fetchedMetadata);
       } catch (error) {
+        console.warn('Failed to fetch metadata for', newUrl, error);
         setMetadataError(t('wishForm.metadata_fetch_error'));
       } finally {
         setIsLoadingMetadata(false);
@@ -80,7 +90,7 @@ const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) =
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!description.trim()) {
       return;
     }
@@ -96,7 +106,7 @@ const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) =
       url: url.trim() || undefined,
       priority,
       metadata: metadata || undefined,
-      metadataError: metadataError || undefined,
+      metadataError: metadataError || undefined
     };
 
     onSave(wishData);
@@ -125,23 +135,20 @@ const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) =
       className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onCancel();
-      }}
-    >
+      }}>
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
         className="bg-gradient-to-br from-purple-900/90 to-blue-900/90 backdrop-blur-md rounded-2xl border border-white/20 p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
+        onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-white">
             {item ? t('wishForm.edit_wish') : t('wishForm.add_wish')}
           </h3>
           <button
             onClick={onCancel}
-            className="p-1 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors"
-          >
+            className="p-1 text-white/60 hover:text-white hover:bg-white/10 rounded transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -162,7 +169,10 @@ const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) =
             />
             <div className="flex justify-between items-center mt-1">
               <span className="text-white/50 text-xs">
-                {t('wishForm.character_count', { current: description.length, max: 500 })}
+                {t('wishForm.character_count', {
+                  current: description.length,
+                  max: 500
+                })}
               </span>
             </div>
           </div>
@@ -197,7 +207,9 @@ const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) =
           {isLoadingMetadata && (
             <div className="bg-white/5 rounded-lg p-3 flex items-center space-x-2">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              <span className="text-white/60 text-sm">{t('wishForm.loading_preview')}</span>
+              <span className="text-white/60 text-sm">
+                {t('wishForm.loading_preview')}
+              </span>
             </div>
           )}
 
@@ -222,7 +234,9 @@ const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) =
                     </h5>
                   )}
                   {metadata.siteName && (
-                    <p className="text-white/60 text-xs mb-1">{metadata.siteName}</p>
+                    <p className="text-white/60 text-xs mb-1">
+                      {metadata.siteName}
+                    </p>
                   )}
                   {(metadata.price || metadata.currency) && (
                     <p className="text-green-400 text-sm">
@@ -256,10 +270,11 @@ const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) =
                     priority === level
                       ? 'bg-white/20 border-white/40 text-white'
                       : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10'
-                  }`}
-                >
+                  }`}>
                   {getPriorityIcon(level)}
-                  <span className="text-sm">{t(`wishForm.priority_${level}`)}</span>
+                  <span className="text-sm">
+                    {t(`wishForm.priority_${level}`)}
+                  </span>
                 </button>
               ))}
             </div>
@@ -270,17 +285,19 @@ const WishForm: React.FC<WishFormProps> = ({ item, onSave, onCancel, isOpen }) =
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors border border-white/20"
-            >
+              className="flex-1 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors border border-white/20">
               {t('wishForm.cancel')}
             </button>
             <button
               type="submit"
               disabled={!description.trim() || !!urlError}
-              className="flex-1 px-4 py-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-            >
+              className="flex-1 px-4 py-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
               <Save size={16} />
-              <span>{item ? t('wishForm.save_changes') : t('wishForm.add_wish_button')}</span>
+              <span>
+                {item
+                  ? t('wishForm.save_changes')
+                  : t('wishForm.add_wish_button')}
+              </span>
             </button>
           </div>
         </form>

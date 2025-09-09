@@ -24,5 +24,3 @@ export interface AppState {
   loading: boolean;
   error: string | null;
 }
-
-// Christmas facts are now handled by i18n translations

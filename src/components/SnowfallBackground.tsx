@@ -9,15 +9,21 @@ interface SnowflakeProps {
   delay: number;
 }
 
-const Snowflake: React.FC<SnowflakeProps> = ({ id, size, x, duration, delay }) => {
+const Snowflake: React.FC<SnowflakeProps> = ({
+  id,
+  size,
+  x,
+  duration,
+  delay
+}) => {
   const snowflakeVariants = {
     initial: { y: -100, x, rotate: 0, opacity: 0 },
     animate: {
       y: window.innerHeight + 100,
-      x: x + (Math.sin(id) * 50),
+      x: x + Math.sin(id) * 50,
       rotate: 360,
-      opacity: [0, 1, 1, 0],
-    },
+      opacity: [0, 1, 1, 0]
+    }
   };
 
   return (
@@ -25,7 +31,7 @@ const Snowflake: React.FC<SnowflakeProps> = ({ id, size, x, duration, delay }) =
       className="fixed pointer-events-none z-10"
       style={{
         width: size,
-        height: size,
+        height: size
       }}
       initial="initial"
       animate="animate"
@@ -34,9 +40,8 @@ const Snowflake: React.FC<SnowflakeProps> = ({ id, size, x, duration, delay }) =
         duration,
         delay,
         repeat: Infinity,
-        ease: "linear",
-      }}
-    >
+        ease: 'linear'
+      }}>
       <div
         className="bg-white rounded-full opacity-80"
         style={{ width: '100%', height: '100%' }}
@@ -52,7 +57,7 @@ const SnowfallBackground: React.FC = () => {
       size: Math.random() * 6 + 2,
       x: Math.random() * window.innerWidth,
       duration: Math.random() * 10 + 10,
-      delay: Math.random() * 5,
+      delay: Math.random() * 5
     }));
   }, []);
 

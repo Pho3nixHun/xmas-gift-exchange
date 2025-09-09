@@ -1,6 +1,8 @@
+import { PasswordHasher } from './passwordHash';
+
 const STORAGE_KEYS = {
   CURRENT_USER: 'christmas-gift-exchange-user',
-  USER_PASSWORD: 'christmas-gift-exchange-password'
+  USER_PASSWORD_HASH: 'christmas-gift-exchange-password-hash'
 };
 
 export class LocalStorageService {
@@ -21,30 +23,42 @@ export class LocalStorageService {
     }
   }
 
-
-  static savePassword(password: string): void {
+  static async savePassword(password: string): Promise<void> {
     try {
-      localStorage.setItem(STORAGE_KEYS.USER_PASSWORD, password);
+      const passwordHash = await PasswordHasher.hashPassword(password);
+      localStorage.setItem(STORAGE_KEYS.USER_PASSWORD_HASH, passwordHash);
     } catch (error) {
       console.warn('Failed to save password to localStorage:', error);
     }
   }
 
-  static getPassword(): string | null {
+  static getPasswordHash(): string | null {
     try {
-      return localStorage.getItem(STORAGE_KEYS.USER_PASSWORD);
+      return localStorage.getItem(STORAGE_KEYS.USER_PASSWORD_HASH);
     } catch (error) {
-      console.warn('Failed to get password from localStorage:', error);
+      console.warn('Failed to get password hash from localStorage:', error);
       return null;
+    }
+  }
+
+  static async verifyStoredPassword(password: string): Promise<boolean> {
+    try {
+      const storedHash = this.getPasswordHash();
+      if (!storedHash) {
+        return false;
+      }
+      const passwordHash = await PasswordHasher.hashPassword(password);
+      return passwordHash === storedHash;
+    } catch (error) {
+      console.warn('Failed to verify stored password:', error);
+      return false;
     }
   }
 
   static clearAll(): void {
     try {
       localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
-      localStorage.removeItem(STORAGE_KEYS.USER_PASSWORD);
-      // Also remove legacy selected name if it exists
-      localStorage.removeItem('christmas-gift-exchange-selected-name');
+      localStorage.removeItem(STORAGE_KEYS.USER_PASSWORD_HASH);
     } catch (error) {
       console.warn('Failed to clear localStorage:', error);
     }

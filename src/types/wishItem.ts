@@ -36,4 +36,3 @@ export interface NamePickerDataV2 {
   wishLists?: Record<string, WishList>; // New structured wishlist
   passwords?: Record<string, string>;
 }
-

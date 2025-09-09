@@ -103,7 +103,7 @@
   },
   "wishItem": {
     "priority_high": "High Priority",
-    "priority_medium": "Medium Priority", 
+    "priority_medium": "Medium Priority",
     "priority_low": "Low Priority",
     "loading_preview": "Loading preview...",
     "preview_error": "Unable to load preview",
@@ -126,7 +126,7 @@
     "loading_preview": "Loading product preview...",
     "priority_label": "How important is this wish?",
     "priority_low": "Low",
-    "priority_medium": "Medium", 
+    "priority_medium": "Medium",
     "priority_high": "High",
     "cancel": "Cancel",
     "save_changes": "Save Changes",

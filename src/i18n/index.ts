@@ -11,22 +11,22 @@ i18n
   .init({
     resources: {
       en: {
-        translation: enTranslations,
+        translation: enTranslations
       },
       hu: {
-        translation: huTranslations,
-      },
+        translation: huTranslations
+      }
     },
     fallbackLng: 'en',
     debug: process.env.NODE_ENV === 'development',
     interpolation: {
-      escapeValue: false,
+      escapeValue: false
     },
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage'],
-      lookupLocalStorage: 'i18nextLng',
-    },
+      lookupLocalStorage: 'i18nextLng'
+    }
   });
 
 export default i18n;
