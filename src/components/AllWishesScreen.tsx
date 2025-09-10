@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Gift, Users, ShoppingCart, Check, X } from 'lucide-react';
+import { Gift, Users, ShoppingCart } from 'lucide-react';
 import { NamePickerData } from '../types';
 import { WishList, URLMetadata } from '../types/wishItem';
 import WishItem from './WishItem';
@@ -176,54 +176,23 @@ const AllWishesScreen: React.FC<AllWishesScreenProps> = ({
             {selectedUserWishes.length > 0 ? (
               <div className="space-y-4">
                 {selectedUserWishes.map((item) => (
-                  <div key={item.id} className="relative">
-                    <div
-                      className={`${
-                        item.purchasedBy ? 'opacity-60' : ''
-                      } transition-opacity`}>
-                      <WishItem
-                        item={item}
-                        onEdit={() => {}} // Read-only for other users
-                        onDelete={() => {}} // Read-only for other users
-                        onMetadataUpdate={handleMetadataUpdate}
-                        readOnly={true}
-                      />
-                    </div>
-
-                    {/* Purchase Status Overlay */}
-                    {selectedUser !== currentUser && (
-                      <div className="absolute top-4 right-4 flex items-center space-x-2">
-                        {item.purchasedBy ? (
-                          <div className="flex items-center space-x-2">
-                            <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm flex items-center">
-                              <Check size={14} className="mr-1" />
-                              {t('allWishes.purchasedBy', {
-                                name: item.purchasedBy
-                              })}
-                            </span>
-                            {item.purchasedBy === currentUser && (
-                              <button
-                                onClick={() =>
-                                  handlePurchaseToggle(selectedUser, item.id)
-                                }
-                                className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors"
-                                title={t('allWishes.markNotPurchased')}>
-                                <X size={16} />
-                              </button>
-                            )}
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() =>
-                              handlePurchaseToggle(selectedUser, item.id)
-                            }
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2">
-                            <ShoppingCart size={16} />
-                            <span>{t('allWishes.markPurchased')}</span>
-                          </button>
-                        )}
-                      </div>
-                    )}
+                  <div
+                    key={item.id}
+                    className={`${
+                      item.purchasedBy ? 'opacity-70' : ''
+                    } transition-opacity`}>
+                    <WishItem
+                      item={item}
+                      onEdit={() => {}} // Read-only for other users
+                      onDelete={() => {}} // Read-only for other users
+                      onMetadataUpdate={handleMetadataUpdate}
+                      readOnly={true}
+                      showPurchaseControls={selectedUser !== currentUser}
+                      currentUser={currentUser}
+                      onPurchaseToggle={(itemId) =>
+                        handlePurchaseToggle(selectedUser, itemId)
+                      }
+                    />
                   </div>
                 ))}
               </div>

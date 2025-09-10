@@ -212,6 +212,7 @@
     "noWishes": "{{name}} hasn't added any wishes yet.",
     "markPurchased": "Mark as Purchased",
     "markNotPurchased": "Unmark as Purchased",
-    "purchasedBy": "Purchased by {{name}}"
+    "purchasedBy": "Purchased by {{name}}",
+    "purchased": "Purchased"
   }
 }
