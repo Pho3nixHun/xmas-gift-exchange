@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#102b32"><title>The little winter house — A Christmas you can step inside</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="winter.css">
+</head>
+<body>
+  <canvas id="world" aria-label="An interactive three-dimensional Christmas house" tabindex="0"></canvas>
+  <div class="film-grain" aria-hidden="true"></div><div class="edge-shade" aria-hidden="true"></div>
+  <header class="masthead"><a href="../index.html" class="brand"><span class="brand-star" aria-hidden="true">✳</span><span>the little<br><b>winter house</b></span></a><div class="top-controls"><button id="sound" aria-label="Turn sound on" aria-pressed="false">♫<span class="sound-label">Sound off</span></button><button id="motion" aria-label="Pause ambient motion" aria-pressed="false">Ⅱ</button><button id="language" aria-label="Váltás magyarra">HU</button><button id="menu-toggle" aria-label="Open menu" aria-expanded="false">☰</button></div></header>
+  <main id="ui"></main><div id="hotspots" aria-label="Places in the house"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="in-world"><div id="board-surface" hidden></div><div id="paper-surface" hidden></div></div>
+  <footer class="scene-footer"><span id="chapter">01 <i></i> A light in the window</span><span id="gesture">Drag gently to look around</span><span class="edition">CHRISTMAS · 2026</span></footer>
+  <div id="menu" hidden></div>
+  <div id="loading" role="status"><span class="loading-star">✳</span><p>A little Christmas is taking shape.</p><div class="loading-track"><i></i></div><small>Lighting the windows. Waking the cat.</small></div>
+  <noscript><div class="no-webgl">This little house needs JavaScript to open its doors.</div></noscript>
+  <script type="module" src="experience.js?v=sky-2"></script>
+</body>
+</html>
