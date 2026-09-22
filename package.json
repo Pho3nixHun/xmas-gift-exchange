@@ -1,0 +1,59 @@
+{
+    "name": "winter-house",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "engines": {
+        "node": ">=24.15.0 <25",
+        "npm": ">=11 <12"
+    },
+    "packageManager": "npm@11.17.0",
+    "scripts": {
+        "hash:organiser": "tsx apps/api/src/adapters/auth/hash-password.ts",
+        "dev": "npm run build -w @winter/contracts && concurrently --kill-others-on-fail -n api,web \"npm run dev -w @winter/api\" \"ng serve web\"",
+        "build": "npm run build -w @winter/contracts && npm run build -w @winter/api && ng build web",
+        "typecheck": "npm run build -w @winter/contracts && tsc -p apps/api/tsconfig.json --noEmit && ngc -p apps/web/tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit",
+        "lint": "eslint . --cache --cache-location node_modules/.cache/eslint",
+        "lint:fix": "npm run lint -- --fix",
+        "lint:ratchet": "node scripts/lint-ratchet.mjs",
+        "format": "prettier --check .",
+        "format:fix": "prettier --write .",
+        "check:docs": "node scripts/check-docs.mjs",
+        "test": "vitest run",
+        "test:integration": "vitest run --config vitest.integration.config.ts",
+        "test:e2e": "playwright test",
+        "db:generate": "drizzle-kit generate --config apps/api/drizzle.config.ts",
+        "db:migrate": "npm run build -w @winter/contracts && npm run db:migrate -w @winter/api"
+    },
+    "devDependencies": {
+        "@angular/build": "21.2.23",
+        "@angular/cli": "21.2.23",
+        "@angular/compiler-cli": "21.2.23",
+        "@eslint/js": "10.0.1",
+        "@playwright/test": "1.58.2",
+        "@types/node": "24.10.1",
+        "@types/pg": "8.15.6",
+        "@types/three": "0.182.0",
+        "@vitest/eslint-plugin": "1.6.27",
+        "angular-eslint": "22.5.0",
+        "concurrently": "9.2.1",
+        "drizzle-kit": "0.31.10",
+        "eslint": "10.10.0",
+        "eslint-config-prettier": "10.1.8",
+        "eslint-import-resolver-typescript": "4.4.5",
+        "eslint-plugin-boundaries": "7.2.0",
+        "eslint-plugin-functional": "10.0.0",
+        "eslint-plugin-import-x": "4.17.1",
+        "eslint-plugin-security": "4.0.1",
+        "globals": "17.12.0",
+        "prettier": "3.8.1",
+        "tsx": "4.21.0",
+        "typescript": "5.9.3",
+        "typescript-eslint": "8.70.0",
+        "vitest": "4.1.11"
+    }
+}

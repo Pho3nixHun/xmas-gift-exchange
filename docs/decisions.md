@@ -76,6 +76,31 @@ and [deployment contract](engineering/deployment.md) specify the details.
 Names still use family-trusted first enrolment; no email or invitation code is
 introduced. Nothing in this documentation pass pushes to GitHub or deploys.
 
+## Revisions after implementation
+
+21 September 2026. Recorded where the built code deliberately differs from the
+proposal above, rather than editing the proposal to look prescient.
+
+- **No repository ports on the server.** The proposal asked application code to
+  receive repository ports. The use cases query the database directly instead,
+  because the draw and claim rules are enforced by row locks, uniqueness
+  constraints and isolation levels, and a port would hide the mechanism that
+  makes them correct. The same proposal already asked for transactions to stay
+  visible in small use-case functions; this resolves that tension in favour of
+  visibility. The cost is accepted: use cases need a real PostgreSQL to test,
+  which the integration suite supplies on a disposable database. `adapters/`
+  therefore holds infrastructure only, and the dependency direction runs
+  application → adapters.
+- **Operations are a union, not free strings.** Read and mutation names live in
+  a union in `application/exchange.ts`, so the route table and the handler table
+  cannot drift apart without failing to compile. `revision` is a read with no
+  route; only the event stream uses it.
+- **Ambient particle groups are instanced.** Embers, tea steam and chimney smoke
+  are single instanced fields driven by one clock uniform each, rather than a
+  sprite per particle updated from the frame callback. Switchable twinkles and
+  bauble auras stay as sprites; their per-object state is not yet expressed as
+  instance attributes.
+
 ## Explicit departures from the reference codebase
 
 Preserve its rules, not its industrial map architecture or dependencies.

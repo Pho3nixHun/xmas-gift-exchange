@@ -1,0 +1,18 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "preserve",
+        "moduleResolution": "bundler",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "types": ["node"],
+        "experimentalDecorators": true,
+        "noEmit": true
+    },
+    "include": [
+        "apps/**/*.ts",
+        "packages/**/*.ts",
+        "e2e/**/*.ts",
+        "*.config.ts"
+    ],
+    "exclude": ["**/dist/**"]
+}

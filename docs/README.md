@@ -2,8 +2,11 @@
 
 The chosen direction is a living 3D Christmas house. These documents turn
 the approved interaction prototype into a plan for a real shared application.
-They describe the intended implementation; the production frontend and
-backend have not been built yet.
+The Angular/Fastify application is now connected end to end; see the
+[startup instructions](../README.md), [operator runbook](engineering/operator-runbook.md) and
+[implementation status](engineering/implementation-status.md).
+The [rendering review](engineering/performance-review.md) records measured scene
+costs, optimizations and the remaining physical-device performance checks.
 
 ## Read in this order
 
@@ -18,6 +21,7 @@ backend have not been built yet.
 | [Data and API](engineering/data-api.md)                   | Storage, permissions, contracts, sessions and operations          |
 | [Realtime draw updates](engineering/realtime.md)          | SSE delivery, reconnects, privacy and polling fallback            |
 | [Draw protocol](engineering/draw-protocol.md)             | Real concealed choice, feasibility and concurrency                |
+| [Sound effects](engineering/audio-assets.md)              | Recorded clips, edits, playback and motion timing                 |
 | [Coding standards](engineering/coding-standards.md)       | Standards adopted from the reference Angular project              |
 | [Implementation plan](implementation-plan.md)             | Ordered work packages and release checks                          |
 | [Decisions](decisions.md)                                 | Agreed behavior, proposed defaults and remaining review points    |

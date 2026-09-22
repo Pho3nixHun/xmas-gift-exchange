@@ -1,0 +1,13 @@
+{
+    "brand": "Csal\u00e1di aj\u00e1nd\u00e9kcsere",
+    "seasonLabel": "Christmas \u00b7 2026",
+    "defaultLocale": "hu",
+    "organiserContact": "Ask the organiser in your family's private chat.",
+    "quality": {
+        "maxDpr": 1.5
+    },
+    "audio": {
+        "backgroundMusic": null,
+        "musicVolume": 0.2
+    }
+}

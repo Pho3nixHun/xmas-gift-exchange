@@ -103,8 +103,11 @@ Before the season opens, show a warm waiting message without exposing the roster
 
 Choose a roster name. The first visitor claiming an unprotected name sets a
 password; a protected name requires that password. Concurrent enrolment has
-one winner. Proposed password policy: 8–128 Unicode code points, spaces and
-paste allowed, no composition puzzle; suggest a memorable phrase.
+one winner. New passwords require 8–128 characters and at least three of:
+lowercase letters, uppercase letters, numbers and special characters. Accented
+letters count in their corresponding case; spaces and paste are allowed. Apply
+the same policy to password recovery and new organiser passwords. Existing
+passwords remain valid for signing in.
 Never retain the submitted password in browser storage.
 
 Successful authentication creates a remembered server session. Returning
@@ -169,8 +172,9 @@ visit, including browsing, saving and cancelling.
 Each wish has a required plain-text description (1–500 Unicode code points
 after trimming), optional HTTP(S) URL (maximum 2,048 characters), priority
 `low | medium | high`, creation time, and stable ID. Default priority is medium.
-Three square, pencil-style choices look like checkboxes but select exactly
-one value using native radio semantics.
+Three stars in one row select low, medium or high using native radio semantics.
+Fill the stars up to the selected level; keep the labels accessible without
+visible explanatory copy.
 
 No product limit on wish count; fetch lists in pages. Order by creation time
 then stable ID, never by priority. Saving immediately shares the wish.

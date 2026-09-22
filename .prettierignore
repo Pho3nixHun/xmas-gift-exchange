@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.angular/
+coverage/
+apps/*/dist/
+packages/*/dist/
+package-lock.json
+docs/prototypes/
+apps/api/drizzle/
+playwright-report/
+test-results/

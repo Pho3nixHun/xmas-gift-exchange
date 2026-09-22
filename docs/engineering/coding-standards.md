@@ -1,7 +1,7 @@
 # Coding, linting and formatting standards
 
-This is the adoption contract for implementation, not a claim that a lint
-configuration has already been installed in this docs-only branch.
+This is the adoption contract for implementation. P0 now supplies the workspace
+configuration; see [implementation status](implementation-status.md) for scope.
 
 ## 1. Provenance and portability
 
@@ -119,6 +119,8 @@ Explicit mutation commands are a documented extension to the read-oriented
 reference: isolate async transport in data-access adapters and expose typed
 pending/result/error state. Never use a GET resource to execute a mutation.
 Keep abort/retry and stale-response behavior visible at that boundary.
+Scene audio may inject a data-access adapter to load static sound assets;
+playback, decoding and caching remain in the scene runtime.
 The realtime adapter owns exactly one stream per active draw view, teardown
 and fallback polling. Event handlers invalidate resource reads; they never
 write scene objects or initiate draw mutations.

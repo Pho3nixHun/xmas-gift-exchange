@@ -3,7 +3,9 @@
 This plan implements the [product](spec.md), [UX/UI](ux-ui.md), and
 [engineering architecture](engineering/architecture.md). Work packages are
 ordered by dependency, not calendar estimates. Complete each exit gate before
-building on an unproven assumption. This pass creates docs only.
+building on an unproven assumption. The connected application is now runnable;
+see [implementation status](engineering/implementation-status.md) for evidence
+and remaining exit gates.
 
 ## P0 — Foundation and compatibility proof
 
@@ -177,4 +179,6 @@ The product spec now reflects the final Winter House decisions. Architecture,
 API/data, draw algorithm, coding standards, UX/UI, proposed defaults and delivery
 gates are documented. Abandoned design docs and rejected comparison pages are
 removed; the live house and illustrated fallback remain runnable. No frontend
-workspace, backend service, lint setup or deployment has been implemented yet.
+workspace, backend service, lint setup or deployment had been implemented at
+that documentation checkpoint. The subsequent implementation and validation are tracked in
+[implementation status](engineering/implementation-status.md).

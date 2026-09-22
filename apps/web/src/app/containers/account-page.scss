@@ -1,0 +1,115 @@
+:host {
+    display: block;
+    min-height: 100dvh;
+    background: radial-gradient(ellipse at top, #315450, #112d35);
+    padding: 24px 16px 80px;
+}
+.account {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #f6e9ce;
+    color: #443725;
+    padding: 30px clamp(20px, 5vw, 50px);
+    border-radius: 5px;
+    box-shadow: 0 12px 80px #0004;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+a {
+    color: inherit;
+}
+h1 {
+    font:
+        normal 38px/1.1 Georgia,
+        serif;
+    letter-spacing: -0.04em;
+}
+label {
+    display: block;
+    font-size: 13px;
+    margin: 12px 0 6px;
+}
+input:not([type='checkbox']),
+textarea {
+    width: 100%;
+    padding: 12px;
+    background: #fff9e9;
+    border: 1px solid #aa916c80;
+    border-radius: 4px;
+    font: 16px/1.4 inherit;
+    color: inherit;
+}
+button,
+summary {
+    min-height: 44px;
+    padding: 12px;
+    cursor: pointer;
+}
+button {
+    background: #254a39;
+    color: #fff1d4;
+    border: 0;
+    border-radius: 4px;
+    margin: 12px 8px 12px 0;
+}
+button:disabled {
+    opacity: 0.45;
+}
+p {
+    line-height: 1.7;
+    font-size: 14px;
+}
+fieldset {
+    border: 1px solid #b9a27d;
+    margin-top: 24px;
+}
+details {
+    border-bottom: 1px solid #ac906140;
+}
+.exclusions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 10px;
+}
+.exclusions label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+}
+input[type='checkbox'] {
+    width: 20px;
+    height: 20px;
+    accent-color: #315342;
+}
+ul {
+    list-style: none;
+    padding: 0;
+}
+li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid #ac906140;
+}
+li button {
+    font-size: 11px;
+}
+.reset {
+    margin: 35px 0 15px;
+    color: #783d33;
+}
+[role='alert'] {
+    color: #8d352d;
+}
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid #bf704d;
+    outline-offset: 3px;
+}

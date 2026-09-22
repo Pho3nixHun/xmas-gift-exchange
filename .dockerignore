@@ -1,0 +1,16 @@
+**/node_modules
+.git
+.angular
+**/dist
+dist
+coverage
+docs/prototypes
+.env
+.env.*
+secrets
+backups
+config/local.*
+playwright-report
+test-results
+
+media

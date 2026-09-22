@@ -1,0 +1,396 @@
+<header class="masthead">
+    <a href="/" class="brand"
+        ><span aria-hidden="true">✳</span
+        ><span
+            >@if(!config()||config()?.brand==='Családi ajándékcsere'){Családi<br /><b
+                >ajándékcsere</b
+            >}@else{<b>{{config()?.brand}}</b>}</span
+        ></a
+    >
+    <nav [attr.aria-label]="x().settings">
+        <button
+            type="button"
+            data-sound-toggle
+            (click)="sound.toggle()"
+            [attr.aria-pressed]="sound.enabled()"
+        >
+            ♫ {{sound.enabled()?x().soundOn:x().soundOff}}
+        </button>
+        <button
+            type="button"
+            (click)="desk.togglePause()"
+            [attr.aria-pressed]="desk.paused()"
+            [attr.aria-label]="desk.paused()?copy().resume:copy().pause"
+        >
+            {{desk.paused()?'▶':'Ⅱ'}}
+        </button>
+        <button
+            type="button"
+            (click)="switchLanguage()"
+            [attr.aria-label]="copy().language"
+        >
+            {{locale()==='hu'?'EN':'HU'}}
+        </button>
+        <button type="button" (click)="desk.toggleSimple()">
+            {{desk.simple()?copy().immersive:copy().simple}}
+        </button>
+        @if(exchange.identity()){<button type="button" (click)="logout()">
+            {{x().logout}}</button
+        >} @if(exchange.identity()&&!desk.simple()){
+        <wh-house-menu
+            [hasPick]="!!exchange.assignment()?.recipient"
+            [copy]="copy()"
+            [label]="x().destinations"
+            (action)="activate($event)"
+        />
+        }
+    </nav>
+</header>
+<main [class.simple-view]="desk.simple()">
+    @if(!sceneReady()&&!desk.simple()&&!house.api.config.error()){<wh-loading-card
+        [locale]="locale()"
+    />} @if(house.api.config.error()){
+    <section class="loading" role="alert">
+        <h1>{{copy().unavailable}}</h1>
+        <button
+            type="button"
+            class="primary"
+            (click)="house.reload();exchange.load()"
+        >
+            {{copy().retry}}
+        </button>
+    </section>
+    }@else if(config();as settings){ @if(!desk.simple()){ @defer(on immediate){
+    <wh-desk-viewport
+        [stage]="desk.stage()"
+        [command]="desk.command()"
+        [ornaments]="ornaments()"
+        [paused]="desk.paused()"
+        [dpr]="settings.quality.maxDpr"
+        [paperElement]="paper"
+        [pinsElement]="pins"
+        [boardElement]="board"
+        (failed)="fallback()"
+        (outside)="leaveZoom()"
+        (action)="activate($event)"
+        (settled)="sceneSettled()"
+    />
+    }@placeholder{
+    <wh-loading-card [locale]="locale()" />
+    }@error{
+    <section class="loading scene-error" role="alert">
+        <p>{{copy().graphics}}</p>
+        <button type="button" (click)="fallback()">{{copy().simple}}</button>
+    </section>
+    } @if(desk.stage()==='outside'){
+    <section class="intro" [class.hush]="desk.busy()">
+        <p class="eyebrow">{{copy().outsideEye}}</p>
+        <h1>
+            {{copy().outsideTitle}}<br /><em>{{copy().outsideEmphasis}}</em>
+        </h1>
+        <p class="description">{{copy().outsideIntro}}</p>
+    </section>
+    } @if(desk.stage()==='tree'){
+    <section class="scene-heading" [class.hush]="desk.busy()">
+        <p class="eyebrow">✧</p>
+        <h1>{{exchange.assignment()?.recipient?x().chosen:copy().treePin}}</h1>
+        <p>{{exchange.assignment()?.recipient?'':copy().treeIntro}}</p>
+    </section>
+    } }
+    @if((desk.stage()==='door'&&!desk.busy())||(desk.simple()&&!exchange.identity())){
+    <section class="entry-sheet" [class.simple-entry]="desk.simple()">
+        @if(exchange.loading()){
+        <p role="status">{{copy().loading}}</p>
+        } @else if(exchange.bootstrap()?.season?.status==='open'){
+        <wh-identity-form
+            [people]="exchange.bootstrap()?.people??[]"
+            [copy]="x()"
+            [contact]="settings.organiserContact"
+            [error]="error()"
+            [pending]="exchange.busy()"
+            (login)="login($event)"
+        />
+        }@else{
+        <h2>{{x().waiting}}</h2>
+        <p>{{settings.organiserContact}}</p>
+        <button type="button" (click)="exchange.load()">{{x().retry}}</button
+        ><a href="/organiser">{{x().organiser}}</a>}
+    </section>
+    } @if(desk.simple()&&exchange.identity()){
+    <nav class="simple-navigation" [attr.aria-label]="copy().room">
+        @if(!exchange.assignment()?.recipient){
+        <button type="button" (click)="activate('tree')">
+            {{copy().treePin}}
+        </button>
+        }
+        <button #seat type="button" (click)="activate('desk')">
+            {{copy().sit}}</button
+        ><button type="button" (click)="activate('letters')">
+            {{copy().lettersPin}}</button
+        ><button type="button" (click)="activate('recipient')">
+            {{copy().recipientPin}}
+        </button>
+    </nav>
+    }
+    <div
+        #pins
+        class="hotspots"
+        [attr.inert]="desk.busy()||desk.simple()?'':null"
+    >
+        @if(!desk.simple()){ @if(desk.stage()==='outside'){<button
+            type="button"
+            class="world-pin"
+            data-anchor="door"
+            (click)="activate('door')"
+        >
+            <span aria-hidden="true">✧</span>{{copy().knock}}</button
+        >} @if(desk.stage()==='room'&&exchange.identity()){
+        @if(!exchange.assignment()?.recipient){
+        <button
+            type="button"
+            class="world-pin"
+            data-anchor="tree"
+            (click)="activate('tree')"
+        >
+            <span aria-hidden="true">✧</span>{{copy().treePin}}
+        </button>
+        }
+        <button
+            #seat
+            type="button"
+            class="world-pin"
+            data-anchor="desk"
+            (click)="activate('desk')"
+        >
+            <span aria-hidden="true">✎</span>{{copy().sit}}
+        </button>
+        <button
+            type="button"
+            class="world-pin"
+            data-anchor="letters"
+            (click)="activate('letters')"
+        >
+            <span aria-hidden="true">▤</span>{{copy().lettersPin}}
+        </button>
+        <button
+            type="button"
+            class="world-pin"
+            data-anchor="recipient"
+            (click)="activate('recipient')"
+        >
+            <span aria-hidden="true">✉</span>{{copy().recipientPin}}
+        </button>
+        } @if(desk.stage()==='tree'&&!exchange.assignment()?.recipient){
+        @for(slot of ornaments();track slot.slotId;let index=$index){<button
+            type="button"
+            class="ornament-pin"
+            [class.unavailable]="!slot.available"
+            [attr.data-anchor]="'ornament-'+index"
+            [attr.aria-label]="copy().ornament+' '+(slot.ordinal+1)+' '+slot.color"
+            [disabled]="!slot.available||exchange.busy()||exchange.drawState()==='unknown'"
+            (click)="pick(index)"
+        >
+            <span aria-hidden="true">✧</span></button
+        >} } }
+    </div>
+    @if(desk.stage()==='tree'&&exchange.identity()){
+    <section
+        class="tree-status"
+        [class.simple-tree]="desk.simple()"
+        aria-live="polite"
+    >
+        @if(exchange.assignment()?.recipient;as recipient){
+        <h2>{{recipient.displayName}}</h2>
+        <button type="button" class="primary" (click)="openRecipient()">
+            {{x().seeNotes}}</button
+        >} @else{ @if(desk.simple()){
+        <div class="simple-ornaments">
+            @for(slot of ornaments();track slot.slotId;let index=$index){<button
+                type="button"
+                [attr.data-color]="slot.color"
+                [disabled]="!slot.available||exchange.busy()||exchange.drawState()==='unknown'"
+                (click)="pick(index)"
+            >
+                {{copy().ornament}} {{slot.ordinal+1}}</button
+            >}
+        </div>
+        } @if(exchange.drawState()==='unknown'){
+        <p>{{x().unknown}}</p>
+        <button type="button" (click)="pick()">{{x().retryPick}}</button>}
+        @else{
+        <p>{{exchange.busy()?x().picking:x().reveal}}</p>
+        } @if((exchange.pool()?.slots?.length??0)>7){
+        <nav [attr.aria-label]="x().branch">
+            <button
+                type="button"
+                [disabled]="notes.branch()===0||exchange.busy()"
+                (click)="notes.showBranch(notes.branch()-1)"
+            >
+                ←</button
+            ><span>{{x().branch}} {{notes.branch()+1}}</span
+            ><button
+                type="button"
+                [disabled]="(notes.branch()+1)*7>=(exchange.pool()?.slots?.length??0)||exchange.busy()"
+                (click)="notes.showBranch(notes.branch()+1)"
+            >
+                →
+            </button>
+        </nav>
+        } }
+        <p role="alert">{{error()}}</p>
+    </section>
+    }
+    <div
+        #board
+        class="board-surface"
+        [class.board-visible]="desk.stage()==='letters'||desk.stage()==='room'"
+        [class.simple-board]="desk.simple()"
+        [attr.aria-hidden]="desk.stage()!=='letters'&&desk.stage()!=='room'"
+        [attr.inert]="desk.stage()!=='letters'?'':null"
+    >
+        <div class="name-cards">
+            @for(person of boardPeople();track person.id){<button
+                type="button"
+                class="pinned-note"
+                (click)="openNotes(person)"
+            >
+                {{person.displayName}}</button
+            >}
+        </div>
+        @if(exchange.people().length>8){
+        <nav [attr.aria-label]="x().page">
+            <button
+                type="button"
+                [disabled]="notes.boardPage()===0"
+                (click)="notes.showBoardPage(notes.boardPage()-1)"
+            >
+                ← {{x().previous}}</button
+            ><button
+                type="button"
+                [disabled]="(notes.boardPage()+1)*8>=exchange.people().length"
+                (click)="notes.showBoardPage(notes.boardPage()+1)"
+            >
+                {{x().next}} →
+            </button>
+        </nav>
+        }
+    </div>
+    <div
+        #paper
+        class="paper"
+        tabindex="-1"
+        [class.simple]="desk.simple()"
+        [class.open]="desk.writing()"
+        [attr.inert]="!desk.writing()?'':null"
+        [attr.aria-hidden]="!desk.writing()"
+        (keydown.escape)="leave()"
+    >
+        @if(exchange.identity()&&desk.writing()){
+        @if(desk.stage()==='desk'&&notes.composing()){
+        <wh-wish-form
+            [preview]="exchange.linkPreview()"
+            (previewUrl)="exchange.loadPreview($event)"
+            [copy]="productionCopy()"
+            [draft]="desk.draft()"
+            (draftChange)="desk.updateDraft($event)"
+            [pending]="exchange.busy()"
+            [result]="error()"
+            (check)="save($event)"
+            (closePaper)="notes.closeEditor()"
+            [cancelLabel]="x().discard"
+            (cancelWriting)="cancelWriting()"
+        />
+        }@else if(desk.stage()==='recipient'&&!notes.selected()){
+        <article class="recipient-sheet">
+            <button
+                type="button"
+                class="close"
+                (click)="leave()"
+                [attr.aria-label]="copy().close"
+            >
+                ×</button
+            ><span aria-hidden="true">✉</span>
+            <h2>{{x().noPerson}}</h2>
+            <button type="button" class="primary" (click)="activate('tree')">
+                {{x().choose}}
+            </button>
+        </article>
+        }@else{
+        <wh-note-stack
+            [priorityLabels]="copy()"
+            [preview]="exchange.linkPreview()"
+            (previewUrl)="exchange.loadPreview($event)"
+            [copy]="x()"
+            [name]="desk.stage()==='desk'?(exchange.identity()?.person?.displayName??''):(notes.selected()?.displayName??'')"
+            [notes]="exchange.notes()?.wishes??[]"
+            [own]="desk.stage()==='desk'"
+            [pending]="exchange.busy()"
+            [error]="error()"
+            [more]="!!exchange.notes()?.nextCursor"
+            (edit)="compose($event)"
+            (add)="compose()"
+            (remove)="remove($event)"
+            (claim)="claim($event)"
+            (nextPage)="exchange.loadNotes(noteOwner(),exchange.notes()?.nextCursor??undefined)"
+            (closePaper)="leave()"
+            (refresh)="refreshNotes()"
+        >
+            @if(guidelines();as rules){
+            <details class="guidelines" noteDisclosure>
+                <summary>{{copy().guidelines}}</summary>
+                <div>
+                    <h2>{{rules.title}}</h2>
+                    <p>{{rules.main_rule}}</p>
+                    <strong>{{rules.budget_range}}</strong>
+                    <p>{{rules.budget_note}}</p>
+                    <h3>{{rules.avoid_title}}</h3>
+                    <ul>
+                        @for(item of rules.avoid_items;track item){
+                        <li>{{item}}</li>
+                        }
+                    </ul>
+                    <h3>{{rules.consider_title}}</h3>
+                    <ul>
+                        @for(item of rules.consider_items;track item){
+                        <li>{{item}}</li>
+                        }
+                    </ul>
+                    <h3>{{rules.tip_title}}</h3>
+                    <ul>
+                        @for(item of rules.tips;track item){
+                        <li>{{item}}</li>
+                        }
+                    </ul>
+                    <p>{{rules.remember}}</p>
+                </div>
+            </details>
+            }
+        </wh-note-stack>
+        } } @if(desk.writing()){
+        <button
+            type="button"
+            class="back paper-back"
+            (click)="leave()"
+            [disabled]="desk.busy()"
+        >
+            ← {{copy().room}}
+        </button>
+        }
+    </div>
+    @if(['tree','letters'].includes(desk.stage())){<button
+        type="button"
+        class="back"
+        (click)="leave()"
+        [disabled]="desk.busy()"
+    >
+        ← {{copy().room}}</button
+    >} @if(graphicsFailed()){
+    <p class="graphics-notice" role="status">{{copy().graphics}}</p>
+    } }@else{
+    <div class="loading" role="status">{{copy().loading}}</div>
+    }
+</main>
+<wh-house-toast [message]="toast()" />
+<footer>
+    <span>{{config()?.seasonLabel}}</span>
+</footer>

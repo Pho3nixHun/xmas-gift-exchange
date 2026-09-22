@@ -1,0 +1,89 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "cli": {
+        "packageManager": "npm",
+        "analytics": false
+    },
+    "projects": {
+        "web": {
+            "projectType": "application",
+            "root": "apps/web",
+            "sourceRoot": "apps/web/src",
+            "prefix": "wh",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "browser": "apps/web/src/main.ts",
+                        "tsConfig": "apps/web/tsconfig.app.json",
+                        "index": "apps/web/src/index.html",
+                        "outputPath": "dist/web",
+                        "styles": ["apps/web/src/styles.scss"],
+                        "assets": [
+                            { "glob": "**/*", "input": "apps/web/public" }
+                        ]
+                    },
+                    "configurations": {
+                        "production": {
+                            "outputHashing": "all",
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "320kB",
+                                    "maximumError": "400kB"
+                                },
+                                {
+                                    "type": "all",
+                                    "maximumWarning": "2.6MB",
+                                    "maximumError": "3MB"
+                                },
+                                {
+                                    "type": "any",
+                                    "maximumWarning": "1.1MB",
+                                    "maximumError": "1.3MB"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "8kB",
+                                    "maximumError": "16kB"
+                                }
+                            ],
+                            "optimization": {
+                                "scripts": true,
+                                "styles": {
+                                    "minify": true,
+                                    "inlineCritical": false
+                                },
+                                "fonts": false
+                            }
+                        },
+                        "development": {
+                            "optimization": false,
+                            "sourceMap": true,
+                            "extractLicenses": false
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "options": {
+                        "proxyConfig": "apps/web/proxy.conf.json",
+                        "port": 4200,
+                        "host": "127.0.0.1"
+                    },
+                    "configurations": {
+                        "development": {
+                            "buildTarget": "web:build:development"
+                        },
+                        "production": {
+                            "buildTarget": "web:build:production"
+                        }
+                    },
+                    "defaultConfiguration": "development"
+                }
+            }
+        }
+    }
+}

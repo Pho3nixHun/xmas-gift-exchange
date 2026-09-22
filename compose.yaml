@@ -1,0 +1,81 @@
+name: winter-house
+services:
+    db:
+        image: postgres:18.1-alpine
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB:-winter_house}
+            POSTGRES_USER: ${POSTGRES_USER:-winter_house}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+        volumes:
+            - database:/var/lib/postgresql
+        healthcheck:
+            test:
+                [
+                    CMD-SHELL,
+                    'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"',
+                ]
+            interval: 5s
+            timeout: 3s
+            retries: 10
+        restart: unless-stopped
+    migrate:
+        build: .
+        image: winter-house:${APP_VERSION:-local}
+        command: [node, apps/api/dist/adapters/db/migrate.js]
+        environment: &server-environment
+            DATABASE_URL: ${DOCKER_DATABASE_URL:?Set DOCKER_DATABASE_URL for the db service}
+            PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:8080}
+            WORKBENCH_ENABLED: ${WORKBENCH_ENABLED:-false}
+            ORGANISER_HASH_FILE: /run/secrets/organiser_hash
+            ALLOW_HTTP_COOKIES: ${ALLOW_HTTP_COOKIES:-false}
+            APP_CONFIG_FILE: /app/config/runtime.json
+            PREVIEWS_ENABLED: ${PREVIEWS_ENABLED:-false}
+            TRUST_PROXY: ${TRUST_PROXY:-}
+            MAINTENANCE: ${MAINTENANCE:-false}
+            PARTICIPANT_SESSION_DAYS: ${PARTICIPANT_SESSION_DAYS:-120}
+            ORGANISER_SESSION_HOURS: ${ORGANISER_SESSION_HOURS:-8}
+            RECOVERY_MINUTES: ${RECOVERY_MINUTES:-30}
+            REAUTH_MINUTES: ${REAUTH_MINUTES:-5}
+            DB_POOL_SIZE: ${DB_POOL_SIZE:-10}
+            DB_QUERY_TIMEOUT_MS: ${DB_QUERY_TIMEOUT_MS:-5000}
+            REQUEST_BODY_BYTES: ${REQUEST_BODY_BYTES:-131072}
+        secrets:
+            - organiser_hash
+        volumes:
+            - ${APP_CONFIG_PATH:-./config/app.example.json}:/app/config/runtime.json:ro
+        depends_on:
+            db:
+                condition: service_healthy
+        restart: 'no'
+    app:
+        image: winter-house:${APP_VERSION:-local}
+        build: .
+        environment: *server-environment
+        secrets:
+            - organiser_hash
+        volumes:
+            - ${APP_CONFIG_PATH:-./config/app.example.json}:/app/config/runtime.json:ro
+            - ${MEDIA_PATH:-./media}:/app/dist/web/browser/media:ro
+        ports:
+            - '${HOST_BIND:-127.0.0.1}:${HOST_PORT:-8080}:3000'
+        depends_on:
+            migrate:
+                condition: service_completed_successfully
+        healthcheck:
+            test:
+                [
+                    CMD,
+                    node,
+                    -e,
+                    'fetch("http://127.0.0.1:3000/api/v1/ready").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))',
+                ]
+            interval: 15s
+            timeout: 5s
+            retries: 3
+        init: true
+        restart: unless-stopped
+volumes:
+    database:
+secrets:
+    organiser_hash:
+        file: ${ORGANISER_HASH_PATH:-./secrets/organiser.hash}

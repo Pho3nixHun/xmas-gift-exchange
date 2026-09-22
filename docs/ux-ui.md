@@ -134,13 +134,18 @@ as an outside click. A drag ending outside must not dismiss it accidentally.
 
 The desk sheet contains a labelled description textarea and character count,
 optional URL, quiet preview region, priority fieldset, save and cancel.
-Three drawn square marks are native radio inputs in one group; visible copy:
-“Just a little idea”, “Would be lovely”, “Would really love this”. Use the
-corresponding Hungarian copy reviewed by a native speaker. Errors sit beside
+Three stars form one native radio group, with one, two or three stars filled.
+Keep “Just a little idea”, “Would be lovely”, “Would really love this” and their
+Hungarian equivalents as accessible labels and tooltips, without visible copy.
+Save and cancel share one row; save is green and cancel has a quiet outline.
+The room-return button sits below the paper without covering the form. Errors sit beside
 the field and are linked with `aria-describedby`; save failure retains text.
 Submitting shows a pending state, then returns to that saved sheet.
 
-Own unclaimed sheets have edit/delete; a claimed sheet has disabled actions and
+Own unclaimed sheets have quiet edit/delete icons beside the star priority,
+with accessible labels, tooltips and 44px tap targets. Deleting opens an inline
+confirmation. Refresh sits beside the name; adding a wish is a compact green
+action in the note footer. A claimed sheet has disabled actions and
 “This wish can't be changed right now.” The owner can infer that it is claimed,
 but sees no buyer, claim timestamp or purchase badge. A release enables editing
 again on refresh. Other people's sheets have claim/release status. If a draft
@@ -155,7 +160,11 @@ discard action. Do not promise recovery after refresh or sign-out. When a
 request is still pending, closing changes presentation only; report its result
 on return and do not submit a second request automatically.
 
-Previous/next buttons always accompany swipes. Only handle arrow keys when
+Stacks with multiple wishes have borderless previous/next arrows and a quiet
+page count alongside the add action. Hide pagination for a single wish.
+The room-return control is attached below the projected paper, with a clear
+gap from the full stack; it follows the paper during resizing and camera movement.
+Only handle arrow keys when
 focus is on stack navigation or its reading region, never within input/text
 selection. Keep the current item by ID after refresh; if deleted by its author,
 show “This wish was removed” and move to an adjacent sheet on acknowledgement.
@@ -199,7 +208,7 @@ HTML destination list through the utility menu for keyboard/simple-view users.
 | Window            | Layered falling snow, hazy roofs, changing warm windows, occasional passing light | Lightweight suggestion of a living city; no detailed city simulation    |
 | Cat               | Idle, pet reaction, sofa hop and curled nap; wakes before ornament fetch          | Explicit action state prevents jump/nap conflicts; paws/body articulate |
 | Cookies           | Three biscuits; one disappears with crumbs per completed click                    | Ignore repeated clicks during bite; empty plate remains empty for visit |
-| Audio             | Fire/room ambience, chimes, cookie chewing/crunch                                 | Off by default, opt-in only, respects sound setting and hidden tab      |
+| Audio             | Fire/room ambience, chimes, cookie chewing/crunch                                 | On by default after first gesture; respects mute and hidden tab         |
 | Snowman/snowballs | Infrequent passing movement outside                                               | Decorative, never receive focus or intercept clicks                     |
 | Santa             | Clear sleigh/reindeer silhouette in visible sky, 14s crossing, roughly every 52s  | First pass starts around 6s of visible ambient time; room/street only   |
 | Shooting star     | Bright core, long golden trail, roughly 3.6s every 28s                            | First pass around 3s; visible on mobile and wide room/street views      |

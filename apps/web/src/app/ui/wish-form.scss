@@ -1,0 +1,163 @@
+:host {
+    display: block;
+    color: var(--ink);
+    height: 100%;
+}
+form {
+    padding: 20px 24px 24px;
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+}
+.paper-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 32px;
+}
+.seal {
+    color: #a54039;
+    font-size: 26px;
+}
+.close {
+    background: none;
+    border: 0;
+    font-size: 30px;
+    width: 44px;
+    height: 44px;
+    color: var(--ink);
+}
+.eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    margin: 8px 0;
+}
+h2 {
+    font:
+        26px/1.15 Georgia,
+        serif;
+    font-weight: normal;
+    letter-spacing: -0.04em;
+    margin: 0 0 18px;
+}
+label,
+legend {
+    font-size: 12px;
+    display: block;
+    font-weight: 600;
+}
+textarea,
+input[type='url'] {
+    display: block;
+    min-height: 44px;
+    width: 100%;
+    font: 16px/1.5 inherit;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: #fffaf044;
+    border: 0;
+    border-bottom: 1px solid #9b876c;
+    border-radius: 0;
+    padding: 10px 0;
+    margin: 3px 0 0;
+    resize: vertical;
+}
+textarea {
+    min-height: 85px;
+    max-height: 180px;
+}
+.count {
+    display: block;
+    text-align: right;
+    font-size: 10px;
+    opacity: 0.75;
+    margin: 3px 0 14px;
+}
+fieldset {
+    display: flex;
+    border: 0;
+    padding: 0;
+    margin: 12px 0 0;
+}
+legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+.priority {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    min-height: 44px;
+    font-size: 30px;
+    color: #946d25;
+    font-weight: 400;
+}
+input[type='radio'] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+}
+input[type='radio']:focus-visible + span {
+    outline: 2px solid #244a39;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+.error,
+.result {
+    font-size: 12px;
+    margin: 8px 0;
+}
+.error {
+    color: #8a271e;
+}
+.error:empty,
+.result:empty,
+.unsaved:empty {
+    display: none;
+}
+.unsaved {
+    font-size: 11px;
+    line-height: 1.5;
+    opacity: 0.8;
+    margin-bottom: 0;
+}
+.actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+.actions button {
+    padding: 10px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    overflow-wrap: anywhere;
+}
+.primary {
+    background: #244a39;
+    color: #fff1d4;
+}
+.cancel {
+    background: transparent;
+    color: #244a39;
+    border: 1px solid #244a3955;
+}
+@media (max-width: 380px) {
+    form {
+        padding: 16px 20px;
+    }
+    h2 {
+        font-size: 25px;
+        margin-bottom: 15px;
+    }
+}

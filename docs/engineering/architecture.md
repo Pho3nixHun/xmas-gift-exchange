@@ -88,11 +88,12 @@ apps/
     i18n/                 typed dictionaries and localisation adapter
   api/src/
     domain/               pure draw, wish and authorisation rules
-    application/          transaction-scoped use cases, port definitions
-    adapters/db/          Drizzle schema, repositories and migrations
-    adapters/previews/    outbound HTTP/image isolation
-    adapters/auth/        password and session implementation
+    application/          transaction-scoped use cases and the service they compose
+    adapters/db/          Drizzle schema, connection pool and migration runner
+    adapters/previews/    outbound HTTP isolation
+    adapters/auth/        password hashing and token secrets
     http/                 Fastify routes, schemas and error mapping
+    errors.ts             the error type every layer raises
     bootstrap.ts          dependency wiring
 packages/
   contracts/              public request/response schemas, error codes
@@ -112,10 +113,24 @@ and opaque action IDs; they never fetch recipients or decide feasibility.
 See [coding standards](coding-standards.md) for enforceable boundaries.
 
 Backend HTTP handlers validate and authenticate, call a use case, serialize
-an audience-specific DTO. Application code owns transaction scope and receives
-repository/crypto/clock ports. Domain functions receive plain data and return
-results. Adapters implement the ports; bootstrap wires them. Avoid generic
-repository frameworks and a class for each table.
+an audience-specific DTO. Domain functions receive plain data and return results.
+Bootstrap wires the concrete database into the service. Avoid generic repository
+frameworks and a class for each table.
+
+Application code owns transaction scope and queries the database directly rather
+than through repository ports. This is deliberate: the draw and claim rules are
+enforced by row locks, uniqueness constraints and isolation levels, so hiding the
+SQL behind a port would hide the mechanism that makes them correct, and this
+document already asks for transactions to stay visible in small use-case
+functions. The cost is that use cases need a real PostgreSQL to test, which the
+integration suite provides on a disposable database. Adapters therefore hold
+infrastructure only — schema, pool, migrations, hashing and outbound fetches —
+and the dependency direction runs application → adapters, enforced in lint.
+
+Read and mutation operations are named in a union in `application/exchange.ts`.
+The route tables and the handler tables live in different files, so the union is
+what keeps them in step: an unknown operation fails to compile at the route, and
+a missing handler fails to compile at the service.
 
 ## 3. Frontend state and scene lifecycle
 

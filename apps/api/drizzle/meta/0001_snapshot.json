@@ -1,0 +1,951 @@
+{
+  "id": "2f365504-bb70-46f1-ae0e-8b26b6cf91e4",
+  "prevId": "672d49ce-109a-4a57-895b-812fc2ff9697",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.assignment": {
+      "name": "assignment",
+      "schema": "",
+      "columns": {
+        "season_id": {
+          "name": "season_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "giver_id": {
+          "name": "giver_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recipient_id": {
+          "name": "recipient_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slot_id": {
+          "name": "slot_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "assignment_season_id_season_id_fk": {
+          "name": "assignment_season_id_season_id_fk",
+          "tableFrom": "assignment",
+          "tableTo": "season",
+          "columnsFrom": [
+            "season_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "assignment_giver_id_participant_id_fk": {
+          "name": "assignment_giver_id_participant_id_fk",
+          "tableFrom": "assignment",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "giver_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "assignment_recipient_id_participant_id_fk": {
+          "name": "assignment_recipient_id_participant_id_fk",
+          "tableFrom": "assignment",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "recipient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "assignment_slot_id_season_id_giver_id_recipient_id_draw_slot_id_season_id_giver_id_recipient_id_fk": {
+          "name": "assignment_slot_id_season_id_giver_id_recipient_id_draw_slot_id_season_id_giver_id_recipient_id_fk",
+          "tableFrom": "assignment",
+          "tableTo": "draw_slot",
+          "columnsFrom": [
+            "slot_id",
+            "season_id",
+            "giver_id",
+            "recipient_id"
+          ],
+          "columnsTo": [
+            "id",
+            "season_id",
+            "giver_id",
+            "recipient_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "assignment_season_id_giver_id_pk": {
+          "name": "assignment_season_id_giver_id_pk",
+          "columns": [
+            "season_id",
+            "giver_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "assignment_season_id_recipient_id_unique": {
+          "name": "assignment_season_id_recipient_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "season_id",
+            "recipient_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "assignment_not_self": {
+          "name": "assignment_not_self",
+          "value": "\"assignment\".\"giver_id\" <> \"assignment\".\"recipient_id\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.wish_claim": {
+      "name": "wish_claim",
+      "schema": "",
+      "columns": {
+        "wish_id": {
+          "name": "wish_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "claimer_id": {
+          "name": "claimer_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "wish_claim_wish_id_wish_id_fk": {
+          "name": "wish_claim_wish_id_wish_id_fk",
+          "tableFrom": "wish_claim",
+          "tableTo": "wish",
+          "columnsFrom": [
+            "wish_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "wish_claim_claimer_id_participant_id_fk": {
+          "name": "wish_claim_claimer_id_participant_id_fk",
+          "tableFrom": "wish_claim",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "claimer_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.exclusion": {
+      "name": "exclusion",
+      "schema": "",
+      "columns": {
+        "giver_id": {
+          "name": "giver_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recipient_id": {
+          "name": "recipient_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "exclusion_giver_id_participant_id_fk": {
+          "name": "exclusion_giver_id_participant_id_fk",
+          "tableFrom": "exclusion",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "giver_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "exclusion_recipient_id_participant_id_fk": {
+          "name": "exclusion_recipient_id_participant_id_fk",
+          "tableFrom": "exclusion",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "recipient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "exclusion_giver_id_recipient_id_pk": {
+          "name": "exclusion_giver_id_recipient_id_pk",
+          "columns": [
+            "giver_id",
+            "recipient_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "exclusion_not_self": {
+          "name": "exclusion_not_self",
+          "value": "\"exclusion\".\"giver_id\" <> \"exclusion\".\"recipient_id\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.participant": {
+      "name": "participant",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalized_name": {
+          "name": "normalized_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "participant_normalized_name_unique": {
+          "name": "participant_normalized_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "normalized_name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.mutation_receipt": {
+      "name": "mutation_receipt",
+      "schema": "",
+      "columns": {
+        "actor": {
+          "name": "actor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "season_id": {
+          "name": "season_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "operation": {
+          "name": "operation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "digest": {
+          "name": "digest",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "response": {
+          "name": "response",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "mutation_receipt_actor_season_id_operation_key_pk": {
+          "name": "mutation_receipt_actor_season_id_operation_key_pk",
+          "columns": [
+            "actor",
+            "season_id",
+            "operation",
+            "key"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.password_recovery": {
+      "name": "password_recovery",
+      "schema": "",
+      "columns": {
+        "token_hash": {
+          "name": "token_hash",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "participant_id": {
+          "name": "participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "season_id": {
+          "name": "season_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "generation": {
+          "name": "generation",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "password_recovery_participant_id_participant_id_fk": {
+          "name": "password_recovery_participant_id_participant_id_fk",
+          "tableFrom": "password_recovery",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "participant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "password_recovery_season_id_season_id_fk": {
+          "name": "password_recovery_season_id_season_id_fk",
+          "tableFrom": "password_recovery",
+          "tableTo": "season",
+          "columnsFrom": [
+            "season_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "password_recovery_participant_id_unique": {
+          "name": "password_recovery_participant_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "participant_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.recovery_audit": {
+      "name": "recovery_audit",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "season_id": {
+          "name": "season_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "participant_id": {
+          "name": "participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "issuer": {
+          "name": "issuer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "outcome": {
+          "name": "outcome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "recovery_audit_season_id_season_id_fk": {
+          "name": "recovery_audit_season_id_season_id_fk",
+          "tableFrom": "recovery_audit",
+          "tableTo": "season",
+          "columnsFrom": [
+            "season_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "recovery_audit_participant_id_participant_id_fk": {
+          "name": "recovery_audit_participant_id_participant_id_fk",
+          "tableFrom": "recovery_audit",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "participant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.season": {
+      "name": "season",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "singleton": {
+          "name": "singleton",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(8)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'setup'"
+        },
+        "setup_revision": {
+          "name": "setup_revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "draw_revision": {
+          "name": "draw_revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "season_singleton_unique": {
+          "name": "season_singleton_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "singleton"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "one_current_season": {
+          "name": "one_current_season",
+          "value": "\"season\".\"singleton\" = true"
+        },
+        "season_status": {
+          "name": "season_status",
+          "value": "\"season\".\"status\" in ('setup', 'open')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.session": {
+      "name": "session",
+      "schema": "",
+      "columns": {
+        "token_hash": {
+          "name": "token_hash",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "csrf": {
+          "name": "csrf",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "participant_id": {
+          "name": "participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "season_id": {
+          "name": "season_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "organiser_version": {
+          "name": "organiser_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reauthenticated_at": {
+          "name": "reauthenticated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "session_participant_id_participant_id_fk": {
+          "name": "session_participant_id_participant_id_fk",
+          "tableFrom": "session",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "participant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "session_role": {
+          "name": "session_role",
+          "value": "(\"session\".\"role\" = 'participant' and \"session\".\"participant_id\" is not null and \"session\".\"season_id\" is not null and \"session\".\"generation\" is not null) or (\"session\".\"role\" = 'organiser' and \"session\".\"participant_id\" is null and \"session\".\"organiser_version\" is not null)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.draw_slot": {
+      "name": "draw_slot",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "season_id": {
+          "name": "season_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "giver_id": {
+          "name": "giver_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recipient_id": {
+          "name": "recipient_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordinal": {
+          "name": "ordinal",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "color": {
+          "name": "color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "draw_slot_season_id_season_id_fk": {
+          "name": "draw_slot_season_id_season_id_fk",
+          "tableFrom": "draw_slot",
+          "tableTo": "season",
+          "columnsFrom": [
+            "season_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "draw_slot_giver_id_participant_id_fk": {
+          "name": "draw_slot_giver_id_participant_id_fk",
+          "tableFrom": "draw_slot",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "giver_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "draw_slot_recipient_id_participant_id_fk": {
+          "name": "draw_slot_recipient_id_participant_id_fk",
+          "tableFrom": "draw_slot",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "recipient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "draw_slot_season_id_giver_id_recipient_id_unique": {
+          "name": "draw_slot_season_id_giver_id_recipient_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "season_id",
+            "giver_id",
+            "recipient_id"
+          ]
+        },
+        "draw_slot_season_id_giver_id_ordinal_unique": {
+          "name": "draw_slot_season_id_giver_id_ordinal_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "season_id",
+            "giver_id",
+            "ordinal"
+          ]
+        },
+        "draw_slot_id_season_id_giver_id_recipient_id_unique": {
+          "name": "draw_slot_id_season_id_giver_id_recipient_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "season_id",
+            "giver_id",
+            "recipient_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "slot_not_self": {
+          "name": "slot_not_self",
+          "value": "\"draw_slot\".\"giver_id\" <> \"draw_slot\".\"recipient_id\""
+        },
+        "slot_color": {
+          "name": "slot_color",
+          "value": "\"draw_slot\".\"color\" in ('red','purple','blue','gold')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.wish": {
+      "name": "wish",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "season_id": {
+          "name": "season_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "priority": {
+          "name": "priority",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content_version": {
+          "name": "content_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "wish_season_id_season_id_fk": {
+          "name": "wish_season_id_season_id_fk",
+          "tableFrom": "wish",
+          "tableTo": "season",
+          "columnsFrom": [
+            "season_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "wish_owner_id_participant_id_fk": {
+          "name": "wish_owner_id_participant_id_fk",
+          "tableFrom": "wish",
+          "tableTo": "participant",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "wish_priority": {
+          "name": "wish_priority",
+          "value": "\"wish\".\"priority\" in ('low','medium','high')"
+        },
+        "wish_description": {
+          "name": "wish_description",
+          "value": "char_length(\"wish\".\"description\") between 1 and 500"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -81,6 +81,11 @@ exception to claim-state secrecy. Do not add claim counts, sorting, content
 version changes or a global claim revision. Participant responses use
 `Cache-Control: no-store`; caches must not mix identities.
 
+Assignment, ornament-pool and wish-list responses include the authenticated
+`viewerId`. The client binds these responses to its current identity and season,
+discards stale requests, and clears private room state on a viewer mismatch (for
+example, after another tab signs in as a different family member).
+
 ## 3. HTTP surface
 
 | Method / route                              | Auth           | Contract                                                                                                              |

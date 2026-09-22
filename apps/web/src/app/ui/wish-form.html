@@ -1,0 +1,74 @@
+<form (submit)="submit($event)">
+    <div class="paper-top">
+        <span class="seal" aria-hidden="true">✳</span
+        ><button
+            type="button"
+            class="close"
+            (click)="closePaper.emit()"
+            [attr.aria-label]="copy().close"
+        >
+            ×
+        </button>
+    </div>
+    <p class="eyebrow">{{ copy().paperEyebrow }}</p>
+    <h2 id="wish-title">{{ copy().paperTitle }}</h2>
+    <label for="description">{{ copy().description }}</label>
+    <textarea
+        id="description"
+        [formField]="fields.description"
+        [placeholder]="copy().placeholder"
+        rows="3"
+        aria-describedby="wish-count wish-error"
+    ></textarea>
+    <span id="wish-count" class="count">{{ count() }} / 500</span>
+    <label for="wish-url">{{ copy().url }}</label>
+    <input
+        id="wish-url"
+        type="url"
+        [formField]="fields.url"
+        placeholder="https://…"
+        (blur)="previewUrl.emit(draft().url)"
+    />
+    @if(preview();as link){
+    <aside class="link-preview">
+        <strong>{{link.title}}</strong><small>{{link.site}}</small>
+    </aside>
+    }
+    <fieldset class="stars">
+        <legend>{{ copy().priority }}</legend>
+        @for (priority of priorities; track priority; let index = $index) {
+        <label class="priority" [title]="copy()[priority]"
+            ><input
+                type="radio"
+                [formField]="fields.priority"
+                [value]="priority"
+                [attr.aria-label]="copy()[priority]"
+            />
+            <span aria-hidden="true"
+                >{{ index <= priorities.indexOf(draft().priority) ? '★' : '☆'
+                }}</span
+            ></label
+        >
+        }
+    </fieldset>
+    <p id="wish-error" class="error">
+        @if (attempted() && invalid()) { {{ copy().invalid }} }
+    </p>
+    <div class="actions">
+        <button class="primary" type="submit" [disabled]="pending()">
+            {{ pending() ? copy().checking : copy().check }}
+        </button>
+        @if(cancelLabel()){
+        <button
+            class="cancel"
+            type="button"
+            [disabled]="pending()"
+            (click)="cancelWriting.emit()"
+        >
+            {{cancelLabel()}}
+        </button>
+        }
+    </div>
+    <p class="result" role="status">{{ result() }}</p>
+    <p class="unsaved">{{ copy().unsaved }}</p>
+</form>

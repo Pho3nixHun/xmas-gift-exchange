@@ -1,0 +1,63 @@
+:root {
+    --paper: #f7efdd;
+    --cream: #fff4df;
+    --ink: #30271f;
+    --gold: #efc677;
+    color-scheme: dark;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    color: var(--cream);
+    background: #102b32;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+}
+button,
+input,
+textarea {
+    font: inherit;
+}
+button,
+a,
+input,
+textarea,
+summary {
+    -webkit-tap-highlight-color: transparent;
+}
+button {
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
+}
+button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+a {
+    color: inherit;
+}
+:focus-visible {
+    outline: 3px solid #bb842a;
+    outline-offset: 3px;
+}
+.primary {
+    background: #244a39;
+    color: #fff5df;
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 18px;
+    font-size: 13px;
+    min-height: 46px;
+}
+.paper {
+    color-scheme: light;
+}
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+    }
+}
