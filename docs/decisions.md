@@ -27,7 +27,7 @@ reviewable implementation plan, not a claim that it has been implemented.
 | D-11 | NgRx SignalStore, standalone OnPush components, SCSS and native controls. Preserve the reference's Signal Forms direction, isolating its experimental Angular 21 API behind presentational form components.                       |
 | D-12 | Node 24 LTS + Fastify 5 + PostgreSQL 18 + Drizzle + Zod. A small modular service with explicit SQL transactions fits the scale and functional coding style.                                                                       |
 | D-13 | npm workspaces and Angular CLI; Vitest and Playwright. Draw updates use Server-Sent Events in the existing Fastify API. No separate realtime service, Redis or message broker; Nx and NestJS are also unnecessary for this scope. |
-| D-14 | Reproduce the reference's formatter/linter rules locally using public tools. Do not require its private Gravity packages, corporate theme or registry.                                                                            |
+| D-14 | Reproduce the reference's formatter/linter rules locally using public tools. Do not require its private packages, corporate theme or registry.                                                                                    |
 | D-15 | Server-enforced secrecy, opaque remembered cookie sessions, real matching checks and season-serialised mutations. Operators with infrastructure access remain trusted.                                                            |
 | D-16 | CSS-projected semantic HTML over physical paper, with a complete simple HTML view using the same stores/API. WebGL2 baseline; WebGPU is not a dependency.                                                                         |
 

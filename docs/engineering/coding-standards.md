@@ -5,22 +5,19 @@ configuration; see [implementation status](implementation-status.md) for scope.
 
 ## 1. Provenance and portability
 
-Reviewed `/home/nlslas/work/Vanderlande/poc-3d-site-rendering` on 20 September
-2026, checkout HEAD `02b22ba4a2aa352efcc1d38fc14928457c792b20`. The inspected
-working-tree files, rather than an assumption that HEAD contains all of them,
-are the source:
-
-- `docs/coding-standards.md` and `eslint.config.mjs`;
-- `.editorconfig`, `.prettierignore`, `tsconfig.json`, `angular.json`;
-- `package.json`, `eslint-ratchet.json`, `scripts/lint-ratchet.mjs`;
-- installed `@gravity/eslint-config` and `@gravity/prettier-config` settings.
+These standards were adapted on 20 September 2026 from a private Angular and
+Three.js reference project, called "the reference" below. The source was its
+written coding standards and its ESLint, Prettier, EditorConfig, TypeScript,
+Angular workspace and lint-ratchet configuration, including the settings of
+the shared lint and format packages it installs. The reference is not public,
+and this repository does not depend on it.
 
 Adopt the rules and rationale below through public tooling and local
-configuration. The reference depends on private Gravity packages. Do not add
-those packages, registry configuration, business code, theme, assets, local
-agent hooks or company-specific project names to this application. Reproduce
-the applicable rule settings explicitly; do not make a clone of this project
-need access to the other checkout. Keep explanatory comments beside exceptions.
+configuration. The reference depends on private packages. Do not add those
+packages, registry configuration, business code, theme, assets, local agent
+hooks or names from the reference to this application. Reproduce the
+applicable rule settings explicitly; a clone of this repository must not need
+access to the reference. Keep explanatory comments beside exceptions.
 
 P0 must compare effective ESLint rules on a representative frontend, template,
 scene, contract, backend and tooling file against this document. Verify that
@@ -137,7 +134,7 @@ no FormsModule/ReactiveFormsModule in the baseline. Its Angular 21 experimental
 status requires the P0 compatibility/form spike and isolated components.
 Use native HTML controls first. If a composite accessible widget is needed,
 evaluate Angular Aria at a compatible exact version; do not invent keyboard
-semantics. Gravity-specific template control names are not copied.
+semantics. The reference's own template control names are not copied.
 
 ## 5. Functional style and controlled mutation
 
@@ -217,7 +214,7 @@ UI controls receive already-localised strings.
 
 Use public ESLint, typescript-eslint, angular-eslint, import-x, boundaries,
 functional, security and Vitest plugins. Start from the same strict base
-behavior; omit Lit/web-component rules and all private Gravity dependencies.
+behavior; omit Lit/web-component rules and the reference's private packages.
 Keep security rules for unsafe regex, child processes, eval, unsafe Buffer use,
 timing comparisons, nonliteral require and insecure randomness. The reference
 turns object-injection detection off because it flags typed indexing; adopt
