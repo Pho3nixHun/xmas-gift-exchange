@@ -16,10 +16,13 @@ import type { AppConfig } from '../config.js';
 import { ExchangeError } from '../errors.js';
 
 import { registerExchange } from './exchange.js';
+import { installAccessLog, logging } from './logging.js';
+import type { LogStream } from './logging.js';
 import { installOpenApi } from './openapi.js';
 
 export type AppServices = { readonly ready: () => Promise<boolean> } & {
     readonly exchange?: ExchangeService;
+    readonly logStream?: LogStream;
 };
 
 export const createApp = async (
@@ -27,7 +30,7 @@ export const createApp = async (
     services: AppServices
 ): Promise<FastifyInstance> => {
     const app = Fastify({
-        logger: false,
+        ...logging(config.logLevel, services.logStream),
         bodyLimit: config.bodyLimit,
         trustProxy: config.trustedProxies.length
             ? [...config.trustedProxies]
@@ -35,6 +38,7 @@ export const createApp = async (
         requestTimeout: 10_000,
         ajv: { customOptions: { removeAdditional: false } },
     });
+    installAccessLog(app);
     installOpenApi(app);
     app.addHook('onRequest', async (request, reply) => {
         reply.header('X-Content-Type-Options', 'nosniff');
@@ -81,7 +85,8 @@ export const createApp = async (
             });
             return;
         }
-        // Never log user input, URLs, credentials or raw validation exceptions.
+        // Never log user input, URLs, credentials or raw validation exceptions:
+        // the err serializer keeps only the error's type, code and stack frames.
         const status =
             typeof error === 'object' &&
             error !== null &&
@@ -91,6 +96,7 @@ export const createApp = async (
             error.statusCode < 500
                 ? error.statusCode
                 : 500;
+        if (status >= 500) request.log.error({ err: error }, 'unhandled error');
         void reply.code(status).send({
             error: {
                 code: status < 500 ? 'VALIDATION_FAILED' : 'INTERNAL_ERROR',

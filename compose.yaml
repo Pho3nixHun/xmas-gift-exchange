@@ -39,6 +39,7 @@ services:
             DB_POOL_SIZE: ${DB_POOL_SIZE:-10}
             DB_QUERY_TIMEOUT_MS: ${DB_QUERY_TIMEOUT_MS:-5000}
             REQUEST_BODY_BYTES: ${REQUEST_BODY_BYTES:-131072}
+            LOG_LEVEL: ${LOG_LEVEL:-info}
         secrets:
             - organiser_hash
         volumes:

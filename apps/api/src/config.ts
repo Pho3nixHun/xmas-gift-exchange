@@ -8,6 +8,15 @@ import type { PublicConfig } from '@winter/contracts';
 import { z } from 'zod';
 
 const root = fileURLToPath(new URL('../../../', import.meta.url));
+const logLevels = [
+    'fatal',
+    'error',
+    'warn',
+    'info',
+    'debug',
+    'trace',
+    'silent',
+] as const;
 const environmentSchema = z.object({
     NODE_ENV: z
         .enum(['development', 'test', 'production'])
@@ -48,11 +57,13 @@ const environmentSchema = z.object({
         .min(1000)
         .max(30000)
         .default(5000),
+    LOG_LEVEL: z.enum(logLevels).default('info'),
 });
 
 export interface AppConfig {
     readonly host: string;
     readonly port: number;
+    readonly logLevel: (typeof logLevels)[number];
     readonly origin: string;
     readonly databaseUrl: string | undefined;
     readonly staticRoot: string;
@@ -117,6 +128,7 @@ export const loadConfig = async (
     return {
         host: env.HOST,
         port: env.PORT,
+        logLevel: env.LOG_LEVEL,
         origin: origin.origin,
         previewsEnabled: env.PREVIEWS_ENABLED === 'true',
         trustedProxies: parseProxies(env.TRUST_PROXY),

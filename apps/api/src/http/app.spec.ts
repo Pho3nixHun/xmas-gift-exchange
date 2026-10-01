@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { z } from 'zod';
 
 import { loadConfig } from '../config.js';
 
@@ -9,17 +10,42 @@ afterEach(async () => {
     await Promise.all([...apps].map(app => app.close()));
     apps.clear();
 });
-const open = async (enabled = 'true') => {
+// Every app writes its log lines into `lines`, which keeps test output clean
+// and lets the logging tests read what an operator would see.
+const open = async (
+    enabled = 'true',
+    ready: () => Promise<boolean> = () => Promise.resolve(false),
+    lines: string[] = []
+) => {
     const config = await loadConfig({
         NODE_ENV: 'test',
         WORKBENCH_ENABLED: enabled,
     });
     const app = await createApp(
         { ...config, staticRoot: '/nonexistent/winter-test' },
-        { ready: () => Promise.resolve(false) }
+        {
+            ready,
+            logStream: {
+                write: line => {
+                    lines.push(line);
+                },
+            },
+        }
     );
     apps.add(app);
     return app;
+};
+const entrySchema = z.looseObject({
+    level: z.number(),
+    msg: z.string(),
+    reqId: z.string().optional(),
+});
+const entries = (lines: readonly string[]) =>
+    lines.map(line => entrySchema.parse(JSON.parse(line)));
+const secrets = {
+    cookie: 'winter-participant=session-secret-cookie',
+    authorization: 'Bearer bearer-secret',
+    'x-csrf-token': 'csrf-secret',
 };
 
 describe('public API boundary', () => {
@@ -93,5 +119,130 @@ describe('public API boundary', () => {
         const app = await open();
         expect((await app.inject('/api/v1/ready')).statusCode).toBe(503);
         expect((await app.inject('/api/v1/health')).statusCode).toBe(200);
+    });
+});
+
+describe('structured logs', () => {
+    it('records a 5xx with request ID, route, status and duration, without the error message', async () => {
+        const lines: string[] = [];
+        const app = await open(
+            'true',
+            () =>
+                Promise.reject(
+                    new Error('invalid input syntax: "Aunt Mary\'s wish"')
+                ),
+            lines
+        );
+        const result = await app.inject({
+            url: '/api/v1/ready?token=recovery-secret',
+            headers: secrets,
+        });
+        expect(result.statusCode).toBe(500);
+        const requestId = z
+            .object({ error: z.object({ requestId: z.string() }) })
+            .parse(result.json()).error.requestId;
+        const logged = entries(lines);
+        expect(logged).toContainEqual(
+            expect.objectContaining({
+                level: 50,
+                msg: 'request failed',
+                reqId: requestId,
+                method: 'GET',
+                route: '/api/v1/ready',
+                statusCode: 500,
+                durationMs: expect.any(Number) as unknown,
+            })
+        );
+        expect(logged).toContainEqual(
+            expect.objectContaining({
+                level: 50,
+                msg: 'unhandled error',
+                reqId: requestId,
+                err: expect.objectContaining({
+                    type: 'Error',
+                    message: '[redacted]',
+                    stack: expect.stringContaining('at ') as unknown,
+                }) as unknown,
+            })
+        );
+        const text = lines.join('');
+        expect(text).not.toContain('Aunt Mary');
+        expect(text).not.toContain('recovery-secret');
+        Object.values(secrets).forEach(secret =>
+            expect(text).not.toContain(secret)
+        );
+    });
+    it('logs route templates and statuses, never credentials, bodies or URLs', async () => {
+        const lines: string[] = [];
+        const app = await open('true', () => Promise.resolve(false), lines);
+        const saved = await app.inject({
+            method: 'POST',
+            url: '/api/v1/workbench/wish-check?token=recovery-secret',
+            headers: { ...secrets, origin: 'http://localhost:4200' },
+            payload: {
+                description: 'A private wish',
+                url: 'https://example.com/private-wish',
+                priority: 'high',
+            },
+        });
+        expect(saved.statusCode).toBe(200);
+        expect(
+            (await app.inject('/organiser/participants/recovery-secret'))
+                .statusCode
+        ).toBe(404);
+        const logged = entries(lines);
+        expect(logged).toContainEqual(
+            expect.objectContaining({
+                level: 30,
+                msg: 'request completed',
+                method: 'POST',
+                route: '/api/v1/workbench/wish-check',
+                statusCode: 200,
+            })
+        );
+        expect(logged).toContainEqual(
+            expect.objectContaining({ route: null, statusCode: 404 })
+        );
+        const text = lines.join('');
+        ['recovery-secret', 'private wish', 'example.com']
+            .concat(Object.values(secrets))
+            .forEach(secret => expect(text).not.toContain(secret));
+    });
+    it('redacts secret headers and fields if a later log call includes them', async () => {
+        const lines: string[] = [];
+        const app = await open('true', () => Promise.resolve(false), lines);
+        app.log.warn(
+            {
+                headers: secrets,
+                body: {
+                    password: 'password-secret',
+                    newPassword: 'new-password-secret',
+                    token: 'token-secret',
+                },
+            },
+            'probe'
+        );
+        const text = lines.join('');
+        expect(text).toContain('[redacted]');
+        Object.values(secrets)
+            .concat(['password-secret', 'new-password-secret', 'token-secret'])
+            .forEach(secret => expect(text).not.toContain(secret));
+    });
+    it('keeps healthy probes below info but logs an unready service', async () => {
+        const lines: string[] = [];
+        const app = await open('true', () => Promise.resolve(false), lines);
+        expect((await app.inject('/api/v1/health')).statusCode).toBe(200);
+        expect((await app.inject('/api/v1/ready')).statusCode).toBe(503);
+        const logged = entries(lines);
+        expect(logged).not.toContainEqual(
+            expect.objectContaining({ route: '/api/v1/health' })
+        );
+        expect(logged).toContainEqual(
+            expect.objectContaining({
+                level: 50,
+                route: '/api/v1/ready',
+                statusCode: 503,
+            })
+        );
     });
 });

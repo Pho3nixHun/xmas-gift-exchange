@@ -65,6 +65,7 @@ copy. Public API responses never include secrets or server addresses.
 | `REQUEST_BODY_BYTES`                     | `131072`; 131072–262144                     | Supports the complete 30-person exclusions matrix                                                                           |
 | `PREVIEWS_ENABLED`                       | `false`                                     | Optional title/site previews; enable only with restricted outbound networking                                               |
 | `MAINTENANCE`                            | `false`                                     | Serve 503, preserving health/readiness endpoints                                                                            |
+| `LOG_LEVEL`                              | `info`; a pino level or `silent`            | JSON log lines on stdout; `debug` adds successful health/readiness probes                                                   |
 | `WORKBENCH_ENABLED`                      | `false`                                     | Legacy validation-only developer endpoint; unnecessary for the real app                                                     |
 
 Safety limits are intentionally fixed within the tested v1 envelope: 30 people,
@@ -136,6 +137,14 @@ inspect and fix it before retrying. Roll back an image only when its database
 schema remains compatible. Keep secrets/configuration and the database volume
 outside image replacement. Error responses contain safe codes/request IDs;
 request bodies, passwords, recovery tokens and assignments are not logged.
+
+The app writes one JSON line per response to stdout (`docker compose logs app`):
+`reqId`, method, route template, status and `durationMs`. A 5xx is logged at
+error level, and its `reqId` matches the `requestId` in the error response. An
+unexpected error adds an `unhandled error` line with the error type, its code
+(for example a PostgreSQL SQLSTATE) and the stack frames. The message reads
+`[redacted]`, because error messages can quote query parameters or input.
+URLs, query strings, headers, cookies, CSRF tokens and bodies are never logged.
 
 Before sharing the real family link, check secure cookies and SSE through the
 actual HTTPS proxy, complete a disposable constrained draw with concurrent
