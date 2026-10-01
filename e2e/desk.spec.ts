@@ -426,6 +426,11 @@ test('home-screen assets and browser language work without loading the room', as
             )
         ).toBe(true);
         await page.getByRole('button', { name: 'HU', exact: true }).click();
+        // The choice is stored when Angular renders it. Reloading before that
+        // render races the write instead of testing that the choice survives.
+        await expect(
+            page.getByRole('button', { name: 'EN', exact: true })
+        ).toBeVisible();
         await page.reload();
         await expect(
             page.getByRole('button', { name: 'EN', exact: true })
