@@ -253,6 +253,8 @@ P0 supplies these workspace commands:
 | `npm run lint` / `lint:fix`     | Whole authored workspace / explicit fixes                    |
 | `npm run lint:ratchet`          | Fail errors and warning regressions                          |
 | `npm run format` / `format:fix` | Check / write authored supported files                       |
+| `npm run format:check`          | Same check as `format` (shared script contract)              |
+| `npm run verify`                | Whole local gate from `verify:steps`; non-zero if any fails  |
 | `npm run check:docs`            | Local links, referenced requirement IDs and required docs    |
 | `npm test`                      | Unit/component tests                                         |
 | `npm run test:integration`      | Disposable real PostgreSQL tests                             |

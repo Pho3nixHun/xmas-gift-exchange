@@ -21,14 +21,24 @@
         "lint:fix": "npm run lint -- --fix",
         "lint:ratchet": "node scripts/lint-ratchet.mjs",
         "format": "prettier --check .",
+        "format:check": "prettier --check .",
         "format:fix": "prettier --write .",
         "check:docs": "node scripts/check-docs.mjs",
         "test": "vitest run",
         "test:integration": "vitest run --config vitest.integration.config.ts",
         "test:e2e": "playwright test",
+        "verify": "if command -v verify-run >/dev/null 2>&1; then exec verify-run; fi; node -e \"const {spawnSync} = require('node:child_process'); const failed = require('./package.json')['verify:steps'].filter(s => spawnSync('npm', ['run', '-s', s], {stdio: 'inherit'}).status !== 0); if (failed.length) { console.error('verify failed: ' + failed.join(', ')); process.exit(1); }\"",
         "db:generate": "drizzle-kit generate --config apps/api/drizzle.config.ts",
         "db:migrate": "npm run build -w @winter/contracts && npm run db:migrate -w @winter/api"
     },
+    "verify:steps": [
+        "format:check",
+        "typecheck",
+        "lint:ratchet",
+        "check:docs",
+        "test",
+        "build"
+    ],
     "devDependencies": {
         "@angular/build": "21.2.23",
         "@angular/cli": "21.2.23",
