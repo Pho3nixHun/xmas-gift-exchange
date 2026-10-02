@@ -17,6 +17,12 @@ export const bootstrap = async (env: NodeJS.ProcessEnv) => {
             ? await createExchange(database.db, config)
             : undefined,
     });
+    database?.pool.on('error', error => {
+        app.log.warn(
+            { err: error },
+            'database connection dropped; the next query reconnects'
+        );
+    });
     app.addHook('onClose', async () => {
         await database?.close();
     });
