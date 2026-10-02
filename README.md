@@ -76,7 +76,7 @@ with `http-server`.
 npm run build
 npm run typecheck
 npm run lint:ratchet
-npm run format
+npm run format:check
 npm run check:docs
 npm test
 TEST_DATABASE_URL=postgresql://... npm run test:integration

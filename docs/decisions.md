@@ -1,7 +1,7 @@
 # Decisions and review points
 
 > **History (closed 2026-10-02).** The decisions below stay as written. New decisions go in
-> [`docs/adr/`](adr/) as numbered records (one decision per file, starting at 0001).
+> `docs/adr/` as numbered records (one decision per file, starting at 0001).
 
 20 September 2026. “Agreed” records user decisions from design work;
 “proposed” is the recommendation in this documentation pass. This is a

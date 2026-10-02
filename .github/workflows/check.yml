@@ -25,7 +25,7 @@ jobs:
             - run: npm run build
             - run: npm run typecheck
             - run: npm run lint:ratchet
-            - run: npm run format
+            - run: npm run format:check
             - run: npm run check:docs
             - run: npm test
             - run: npm run db:migrate

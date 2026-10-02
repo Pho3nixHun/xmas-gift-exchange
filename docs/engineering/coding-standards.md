@@ -245,21 +245,21 @@ user-visible flows and accessibility, not private implementation trivia.
 
 P0 supplies these workspace commands:
 
-| Command                         | Contract                                                     |
-| ------------------------------- | ------------------------------------------------------------ |
-| `npm run dev`                   | Web + API with local proxy, documented database prerequisite |
-| `npm run build`                 | Contracts, API, production web; no implicit database reset   |
-| `npm run typecheck`             | Every app, contracts and tests                               |
-| `npm run lint` / `lint:fix`     | Whole authored workspace / explicit fixes                    |
-| `npm run lint:ratchet`          | Fail errors and warning regressions                          |
-| `npm run format` / `format:fix` | Check / write authored supported files                       |
-| `npm run format:check`          | Same check as `format` (shared script contract)              |
-| `npm run verify`                | Whole local gate from `verify:steps`; non-zero if any fails  |
-| `npm run check:docs`            | Local links, referenced requirement IDs and required docs    |
-| `npm test`                      | Unit/component tests                                         |
-| `npm run test:integration`      | Disposable real PostgreSQL tests                             |
-| `npm run test:e2e`              | Built frontend/API user journeys                             |
-| `npm run db:migrate`            | Explicit reviewed migrations; never edit generated history   |
+| Command                     | Contract                                                     |
+| --------------------------- | ------------------------------------------------------------ |
+| `npm run dev`               | Web + API with local proxy, documented database prerequisite |
+| `npm run build`             | Contracts, API, production web; no implicit database reset   |
+| `npm run typecheck`         | Every app, contracts and tests                               |
+| `npm run lint` / `lint:fix` | Whole authored workspace / explicit fixes                    |
+| `npm run lint:ratchet`      | Fail errors and warning regressions                          |
+| `npm run format`            | Write authored supported files (shared script contract)      |
+| `npm run format:check`      | Check them; what CI runs                                     |
+| `npm run verify`            | Whole local gate from `verify:steps`; non-zero if any fails  |
+| `npm run check:docs`        | Local links, referenced requirement IDs and required docs    |
+| `npm test`                  | Unit/component tests                                         |
+| `npm run test:integration`  | Disposable real PostgreSQL tests                             |
+| `npm run test:e2e`          | Built frontend/API user journeys                             |
+| `npm run db:migrate`        | Explicit reviewed migrations; never edit generated history   |
 
 Do not manually edit lockfiles or generated artifacts. Use package/build tools.
 Keep these commands and actual configuration in sync during implementation.
