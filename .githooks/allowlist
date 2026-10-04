@@ -1,0 +1,6 @@
+# .githooks/allowlist — exceptions to .githooks/pre-commit, one "<rule> <path-glob>" per line.
+# Rules: size, content, env, name. A glob is a bash pattern on the repo-relative path (* crosses /).
+# Give every line its reason; this file is reviewed like code.
+
+# drizzle-kit migrations are schema source, not dumps (`npm run db:generate` writes them).
+name apps/api/drizzle/*.sql

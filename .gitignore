@@ -18,3 +18,32 @@ config/local.*
 
 media/*
 !media/.gitkeep
+
+# --- Baseline (review EXT-11): secrets, dumps, PII exports, archives. ---
+# .githooks/pre-commit is the second line of defence; never `git add -f` past these.
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+*.sql
+*.sql.gz
+*.dump
+*.sqlite
+*.sqlite3
+*.db
+*.csv
+*.xlsx
+*.zip
+*.tgz
+*.tar
+*.tar.gz
+*.tar.zst
+*.7z
+*.bak
+*.bak.*
+# drizzle-kit migrations are schema source (.githooks/allowlist says the same)
+!apps/api/drizzle/*.sql

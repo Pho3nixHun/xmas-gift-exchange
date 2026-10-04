@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+# .githooks/pre-commit — zero-dependency commit guard (bash + git + awk + grep).
+# The same file lives in ~/mcp, xmas-gift-exchange, netstatus, tty, phoenix-web
+# and network-architecture (review EXT-11); it generalises /srv/lab/.githooks/pre-commit.
+#
+# Install once per clone:  git config core.hooksPath .githooks
+# Audit the whole tree:    .githooks/pre-commit --all   (every tracked file, not just staged)
+# Per-repo exceptions:     .githooks/allowlist          (one "<rule> <path-glob>" per line)
+# Deliberate bypass:       git commit --no-verify       (owner only; say why in the message)
+#
+# Scans what is STAGED (blobs in the index), not the working tree, so a file
+# edited after `git add` cannot sneak past. Four rules, named as in the allowlist:
+#   size     no blob larger than 5 MiB                  (recordings, models, firmware)
+#   content  no private keys or API tokens              (PEM/OpenSSH/PGP, age, WireGuard,
+#                                                        GitHub, AWS, Slack, Anthropic/OpenAI,
+#                                                        Google, JWTs such as HA tokens)
+#   env      no .env / *.env / .env.* unless SOPS-encrypted (.env.example is fine)
+#   name     no dumps, PII exports, archives, key stores or password files by name
+# Findings name the file and the rule, never the matching text.
+set -eu   # deliberately NOT pipefail: no pipes below; SIGPIPE must never hide a match
+
+readonly MAX_BYTES=$((5 * 1024 * 1024))
+readonly SECRET_RE="$(
+    IFS='|'
+    patterns=(
+        '-----BEGIN ([A-Z0-9]+ )*PRIVATE KEY( BLOCK)?-----'
+        'AGE-SECRET-KEY-1[0-9A-Z]{50,}'
+        'PrivateKey[[:space:]]*=[[:space:]]*[A-Za-z0-9+/]{42,43}='
+        '(^|[^A-Za-z0-9_])(gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{50,})'
+        '(^|[^A-Z0-9])(AKIA|ASIA)[0-9A-Z]{16}([^A-Z0-9]|$)'
+        'xox[abposr]-[0-9]{6,}-[A-Za-z0-9-]{10,}'
+        '(^|[^A-Za-z0-9_-])sk-(ant-[a-z0-9]+-|proj-|svcacct-|admin-)?[A-Za-z0-9_-]{40,}'
+        'AIza[0-9A-Za-z_-]{35}'
+        'eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{16,}'
+    )
+    printf '%s' "${patterns[*]}"
+)"
+readonly RULES='size content env name'
+findings=0
+allow=()
+
+block() {
+    printf 'pre-commit: BLOCKED %s [%s]: %s\n' "$1" "$2" "$3" >&2
+    findings=$((findings + 1))
+}
+
+load_allowlist() { # from the index when staged there, else the working tree
+    local src rule glob
+    if ! src=$(git show :.githooks/allowlist 2>/dev/null); then
+        [ -f .githooks/allowlist ] || return 0
+        src=$(<.githooks/allowlist)
+    fi
+    while read -r rule glob _; do
+        case "$rule" in
+            '' | '#'*) continue ;;
+        esac
+        if [[ " $RULES " != *" $rule "* ]] || [ -z "$glob" ]; then
+            printf 'pre-commit: .githooks/allowlist: bad line "%s %s" (rules: %s)\n' "$rule" "$glob" "$RULES" >&2
+            exit 1
+        fi
+        allow+=("$rule $glob")
+    done <<<"$src"
+}
+
+allowed() { # $1 = rule, $2 = path; globs are bash patterns, so * also crosses /
+    local entry
+    for entry in "${allow[@]}"; do
+        if [ "${entry%% *}" = "$1" ] && [[ $2 == ${entry#* } ]]; then return 0; fi
+    done
+    return 1
+}
+
+name_reason() { # $1 = path; prints why the name alone is blocked, or nothing
+    case "${1##*/}" in
+        *.sql | *.sql.gz | *.dump | *.sqlite | *.sqlite3 | *.db)
+            echo 'database dump — dumps live in /srv/backups/<app>' ;;
+        *.csv | *.xlsx | *.xls)
+            echo 'tabular export (guest and client lists are PII) — /srv/backups, or SOPS' ;;
+        *.zip | *.tgz | *.tar | *.tar.gz | *.tar.zst | *.7z | *.rar)
+            echo 'archive — /srv/backups or /srv/archive' ;;
+        *.key | *.p12 | *.pfx | *.jks | *.keystore | *.ppk | *.kdbx | .htpasswd | id_rsa | id_dsa | id_ecdsa | id_ed25519)
+            echo 'key or credential store — SOPS, or keep it offline' ;;
+        *.ts | *.tsx | *.mts | *.cts | *.js | *.jsx | *.mjs | *.cjs | *.py | *.sh | *.md | *.html | *.css | *.scss | *.svg)
+            ;; # source and docs may well be *about* passwords
+        *[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]* | *[Pp][Aa][Ss][Ss][Ww][Dd]*)
+            echo 'password file — SOPS' ;;
+    esac
+}
+
+is_env_path() { # *.env, .env, .env.* — but not the documented templates
+    case "$1" in
+        *.env.example | *.env.sample | *.env.template) return 1 ;;
+        *.env | .env | */.env | .env.* | */.env.*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+sops_env_ok() { # $1 = blob sha; true only if SOPS-managed and every value is encrypted
+    awk '
+        /^[[:space:]]*(#|$)/ { next }
+        /^sops_mac=ENC\[/    { mac = 1; next }
+        /^sops_/             { next }
+        !/^[A-Za-z_][A-Za-z0-9_]*=ENC\[AES256_GCM,/ { plain++ }
+        END { exit !(mac && plain == 0) }
+    ' < <(git cat-file blob "$1")
+}
+
+entries() { # prints "<mode> <sha>\t<path>" for each blob to check
+    local meta path mode sha
+    if [ "${1:-}" = --all ]; then
+        while IFS=$'\t' read -r meta path; do
+            read -r mode sha _ <<<"$meta" # "mode sha stage"
+            printf '%s %s\t%s\n' "$mode" "$sha" "$path"
+        done < <(git -c core.quotePath=off ls-files --stage)
+    else
+        while IFS=$'\t' read -r meta path; do
+            read -r _ mode _ sha _ <<<"$meta" # ":old_mode new_mode old_sha new_sha status"
+            printf '%s %s\t%s\n' "$mode" "$sha" "$path"
+        done < <(git -c core.quotePath=off diff --cached --raw --no-abbrev --no-renames --diff-filter=ACM)
+    fi
+}
+
+case "${1:-}" in
+    '' | --all) ;;
+    *) echo 'usage: .githooks/pre-commit [--all]' >&2; exit 2 ;;
+esac
+cd "$(git rev-parse --show-toplevel)"
+load_allowlist
+
+while IFS=$'\t' read -r meta path; do
+    read -r mode sha <<<"$meta"
+    if [ "$mode" = 160000 ]; then continue; fi # submodule pointer, no blob
+
+    # name — a second line of defence against `git add -f` past .gitignore
+    reason=$(name_reason "$path")
+    if [ -n "$reason" ] && ! allowed name "$path"; then
+        block "$path" name "$reason"
+        continue
+    fi
+
+    size=$(git cat-file -s "$sha")
+    if [ "$size" -gt "$MAX_BYTES" ] && ! allowed size "$path"; then
+        block "$path" size "$(((size + 1048575) / 1048576)) MiB (limit 5 MiB) — keep it in /srv/backups or /srv/archive"
+        continue # too big to scan, already blocked
+    fi
+    if ! allowed content "$path" && grep -aqE -- "$SECRET_RE" < <(git cat-file blob "$sha"); then
+        block "$path" content 'private key or API token — encrypt it with sops, or keep it offline'
+    fi
+    if is_env_path "$path" && ! allowed env "$path" && ! sops_env_ok "$sha"; then
+        block "$path" env 'plaintext env (no sops_mac, or a value not ENC[...]) — only .env.example is committed'
+    fi
+done < <(entries "${1:-}")
+
+if [ "$findings" -ne 0 ]; then
+    if [ "${1:-}" = --all ]; then
+        echo "pre-commit --all: $findings finding(s) in tracked files" >&2
+    else
+        echo 'pre-commit: nothing committed. Unstage with: git restore --staged <path>' >&2
+    fi
+    exit 1
+fi
