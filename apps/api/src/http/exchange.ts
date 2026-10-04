@@ -125,7 +125,10 @@ export const registerExchange = (
         if (value)
             limits.set(key, { ...value, count: Math.max(0, value.count - 1) });
     };
-    app.addHook('onClose', () => {
+    // preClose, not onClose: Fastify waits for open connections before it runs
+    // onClose, and an open SSE stream never ends on its own, so app.close()
+    // (SIGTERM, upgrade.sh) would hang until every family tab disconnected.
+    app.addHook('preClose', () => {
         streams.close();
         return Promise.resolve();
     });

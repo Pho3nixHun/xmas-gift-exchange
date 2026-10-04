@@ -1,6 +1,7 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, assert, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
+import type { ExchangeService } from '../application/exchange.js';
 import { loadConfig } from '../config.js';
 
 import { createApp } from './app.js';
@@ -244,5 +245,77 @@ describe('structured logs', () => {
                 statusCode: 503,
             })
         );
+    });
+});
+
+// Every session is valid and the draw never moves, so a stream opens and then
+// idles the way a family member's forgotten tab does.
+const unused = () => Promise.reject(new Error('not used by the stream test'));
+const idleExchange: ExchangeService = {
+    preview: unused,
+    readPreview: unused,
+    bootstrap: unused,
+    authenticate: unused,
+    recover: unused,
+    read: () =>
+        Promise.resolve({
+            status: 200,
+            body: { seasonId: 'season', drawRevision: 0 },
+        }),
+    mutate: unused,
+    logout: unused,
+    reauthenticate: unused,
+    issueRecovery: unused,
+};
+
+describe('live-update streams', () => {
+    it('ends open streams on close instead of waiting for the clients to leave', async () => {
+        const config = await loadConfig({ NODE_ENV: 'test' });
+        const app = await createApp(
+            { ...config, staticRoot: '/nonexistent/winter-test' },
+            {
+                ready: () => Promise.resolve(true),
+                exchange: idleExchange,
+                logStream: { write: () => undefined },
+            }
+        );
+        const client = new AbortController();
+        let closing: Promise<void> | undefined;
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        try {
+            const address = await app.listen({ host: '127.0.0.1', port: 0 });
+            const response = await fetch(`${address}/api/v1/me/draw-events`, {
+                signal: client.signal,
+            });
+            expect(response.status).toBe(200);
+            assert(response.body);
+            const reader = response.body.getReader();
+            expect(
+                new TextDecoder().decode((await reader.read()).value)
+            ).toContain('event: ready');
+            closing = app.close();
+            const stalled = new Promise<string>(resolve => {
+                timer = setTimeout(
+                    resolve,
+                    2000,
+                    'still waiting for the stream'
+                );
+            });
+            expect(
+                await Promise.race([closing.then(() => 'closed'), stalled])
+            ).toBe('closed');
+            // The client sees its stream end, so EventSource reconnects to
+            // the next process instead of hanging on a dead one.
+            expect(
+                await reader.read().then(
+                    result => result.done,
+                    () => true
+                )
+            ).toBe(true);
+        } finally {
+            clearTimeout(timer);
+            client.abort();
+            await (closing ?? app.close());
+        }
     });
 });
