@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    analyticsConfigSchema,
     audioConfigSchema,
     publicConfigSchema,
     wishDraftSchema,
@@ -78,5 +79,23 @@ describe('deployment audio settings', () => {
         expect(audioConfigSchema.safeParse({ musicVolume: 2 }).success).toBe(
             false
         );
+    });
+});
+
+describe('deployment analytics settings', () => {
+    it('stays off unless the deployment names a tracker', () => {
+        expect(analyticsConfigSchema.parse(undefined)).toBeNull();
+        expect(
+            analyticsConfigSchema.parse({ trackerPath: '/stats/', siteId: '3' })
+        ).toEqual({ trackerPath: '/stats/', siteId: '3' });
+    });
+    it.each([
+        { trackerPath: 'https://other.example/', siteId: '3' },
+        { trackerPath: '//other.example/', siteId: '3' },
+        { trackerPath: '/stats', siteId: '3' },
+        { trackerPath: '/stats/', siteId: '0' },
+        { trackerPath: '/stats/', siteId: '3', cookies: true },
+    ])('requires a same-origin path and a site number: %o', analytics => {
+        expect(analyticsConfigSchema.safeParse(analytics).success).toBe(false);
     });
 });

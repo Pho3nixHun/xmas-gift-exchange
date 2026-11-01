@@ -242,4 +242,8 @@ before launch; no hosting-provider selection is outstanding.
 Use install metadata and icons. If adding a service worker, cache only public
 versioned assets, never `/api`, private HTML or mutations; a fresh install may
 still require network. Show a friendly offline screen with explicit retry.
-Self-host fonts/assets and retain their licenses. No private-data analytics.
+Self-host fonts/assets and retain their licenses. No private-data analytics:
+the only counter is optional (`analytics` in the runtime JSON, off by
+default), cookieless, same-origin through the operator's proxy, and sends a
+page's path and nothing else: no fragment (recovery tokens live there), query,
+title, link or identity.

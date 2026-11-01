@@ -15,7 +15,12 @@ commit on your own server. Do not publish secrets or use the browser-test server
 4. Copy `config/app.example.json` to an ignored `config/local.app.json`; set
    `APP_CONFIG_PATH=./config/local.app.json`. Set the real organiser contact,
    labels, default language and rendering DPR. The historical guideline files
-   preserve the agreed HU/EN budgets without currency conversion.
+   preserve the agreed HU/EN budgets without currency conversion. Visit
+   counting is off unless you add
+   `"analytics": { "trackerPath": "/stats/", "siteId": "3" }`; your proxy must
+   then send `<trackerPath>matomo.js` and `matomo.php` (and nothing else of
+   Matomo) to a self-hosted Matomo. The app sends cookieless page views
+   carrying only the path.
 5. Configure your existing TLS proxy using
    [the nginx example](../../config/nginx.example.conf). Enable HTTP/2 at the
    public listener. Set `TRUST_PROXY` to the actual proxy IP/CIDR, never an

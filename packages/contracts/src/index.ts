@@ -63,6 +63,19 @@ export const audioConfigSchema = z.strictObject({
     musicVolume: z.number().min(0).max(1).default(0.2),
 });
 
+// Optional cookieless visit counts by a self-hosted Matomo the operator proxies
+// same-origin (the CSP allows only 'self'). Off unless the deployment names it.
+export const analyticsConfigSchema = z
+    .strictObject({
+        trackerPath: z
+            .string()
+            .max(100)
+            .regex(/^\/(?!\/)[A-Za-z0-9_/-]*\/$/u),
+        siteId: z.string().regex(/^[1-9][0-9]{0,5}$/u),
+    })
+    .nullable()
+    .default(null);
+
 export const publicConfigSchema = z.strictObject({
     brand: z.string().min(1).max(80),
     seasonLabel: z.string().min(1).max(80),
@@ -74,6 +87,7 @@ export const publicConfigSchema = z.strictObject({
         musicVolume: 0.2,
     }),
     quality: z.strictObject({ maxDpr: z.number().min(0.75).max(2) }),
+    analytics: analyticsConfigSchema,
     guidelines: z.strictObject({ hu: guidelinesSchema, en: guidelinesSchema }),
 });
 export type PublicConfig = Readonly<z.infer<typeof publicConfigSchema>>;
